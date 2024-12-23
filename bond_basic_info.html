@@ -1,0 +1,68 @@
+<body>
+  <h1>bond_basic_info</h1>
+
+  <script>
+    var xhr = new XMLHttpRequest();
+    var url =
+      "http://apis.data.go.kr/1160100/service/GetBondIssuInfoService/getBondBasiInfo"; /*URL*/
+    var queryParams =
+      "?" +
+      encodeURIComponent("serviceKey") +
+      "=" +
+      "U6p1XzM4mJb88%2BPKgbacXczOMfx69Pumdpdz2hT5HmXMx3KMV5Xf2HOtNCXKST7oWQgWC0r0T73Z73DbQfJiMg%3D%3D"; /*Service Key*/
+    queryParams +=
+      "&" +
+      encodeURIComponent("numOfRows") +
+      "=" +
+      encodeURIComponent("9999"); /**/
+    queryParams +=
+      "&" +
+      encodeURIComponent("pageNo") +
+      "=" +
+      encodeURIComponent("2000"); /**/
+    queryParams +=
+      "&" +
+      encodeURIComponent("resultType") +
+      "=" +
+      encodeURIComponent("json"); /**/
+    // queryParams +=
+    //   "&" +
+    //   encodeURIComponent("basDt") +
+    //   "=" +
+    //   encodeURIComponent("20200617"); /**/
+    // queryParams +=
+    //   "&" +
+    //   encodeURIComponent("crno") +
+    //   "=" +
+    //   encodeURIComponent("1146710001456"); /**/
+    // queryParams +=
+    //   "&" +
+    //   encodeURIComponent("bondIsurNm") +
+    //   "=" +
+    //   encodeURIComponent("효성화학"); /**/
+
+    // xhr.open("GET", url + queryParams);
+    // xhr.onreadystatechange = function () {
+    //   if (this.readyState == 4) {
+    //     alert(
+    //       "Status: " +
+    //         this.status +
+    //         "nHeaders: " +
+    //         JSON.stringify(this.getAllResponseHeaders()) +
+    //         "nBody: " +
+    //         this.responseText
+    //     );
+    //   }
+    // };
+
+    // xhr.send("");
+
+    const asd = url + queryParams;
+
+    fetch(asd)
+      .then((result) => result.json())
+      .then((json) => {
+        console.log(json);
+      });
+  </script>
+</body>
