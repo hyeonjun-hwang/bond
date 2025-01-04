@@ -1,10 +1,8 @@
 <body>
-  <h1>bond_issuance</h1>
-
+  <h1>bond_price</h1>
   <script>
-    // var xhr = new XMLHttpRequest();
     var url =
-      "http://apis.data.go.kr/1160100/service/GetBondTradInfoService/getIssuIssuItemStat"; /*URL*/
+      "https://apis.data.go.kr/1160100/service/GetBondSecuritiesInfoService/getBondPriceInfo"; /*URL*/
     var queryParams =
       "?" +
       encodeURIComponent("serviceKey") +
@@ -27,20 +25,20 @@
     //   encodeURIComponent("basDt") +
     //   "=" +
     //   encodeURIComponent("20220926"); /**/
+    queryParams += // ISIN코드 일치
+      "&" +
+      encodeURIComponent("isinCd") +
+      "=" +
+      encodeURIComponent("KR6206352E55"); // 에스케이어드밴스드12-2
     // queryParams +=
     //   "&" +
-    //   encodeURIComponent("crno") +
+    //   encodeURIComponent("likeItmsNm") +
     //   "=" +
-    //   encodeURIComponent("2048125145"); /**/
-    queryParams +=
-      "&" +
-      encodeURIComponent("bondIsurNm") +
-      "=" +
-      encodeURIComponent("에스케이어드밴스드"); /**/
+    //   encodeURIComponent("에스케이어드밴스드"); /**/
 
-    const request_bond_issuance = url + queryParams;
+    const request_bond_price = url + queryParams;
 
-    fetch(request_bond_issuance)
+    fetch(request_bond_price)
       .then((result) => result.json())
       .then((json) => {
         console.log(json);
