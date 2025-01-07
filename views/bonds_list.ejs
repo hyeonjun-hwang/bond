@@ -1,0 +1,180 @@
+<div class="container-fluid mt-3">
+    <!-- 필터링 옵션들 -->
+    <div class="row mb-3">
+        <!-- 기간 선택 -->
+        <div class="col-md-4 mb-2">
+            <select class="form-select" id="periodSelect">
+                <option value="14" <%= dateRange.period === '14' ? 'selected' : '' %>>최근 14일</option>
+                <option value="30" <%= dateRange.period === '30' ? 'selected' : '' %>>최근 30일</option>
+                <option value="90" <%= dateRange.period === '90' ? 'selected' : '' %>>최근 90일</option>
+                <option value="all" <%= dateRange.period === 'all' ? 'selected' : '' %>>전체 기간</option>
+            </select>
+        </div>
+        
+        <!-- 이자지급방식 선택 -->
+        <div class="col-md-4 mb-2">
+            <select class="form-select" id="intTypeSelect">
+                <option value="">이자지급방식 전체</option>
+                <% bondFilters.intTypes.forEach(type => { %>
+                    <option value="<%= type %>" <%= filters.intType === type ? 'selected' : '' %>><%= type %></option>
+                <% }); %>
+            </select>
+        </div>
+        
+        <!-- 금리변동구분 선택 -->
+        <div class="col-md-4 mb-2">
+            <select class="form-select" id="rateTypeSelect">
+                <option value="">금리변동구분 전체</option>
+                <% bondFilters.rateTypes.forEach(type => { %>
+                    <option value="<%= type %>" <%= filters.rateType === type ? 'selected' : '' %>><%= type %></option>
+                <% }); %>
+            </select>
+        </div>
+    </div>
+
+    <!-- 총 개수 표시 -->
+    <div class="row mb-3">
+        <div class="col-12 text-end">
+            <span class="total-count">총 <strong><%= pagination.total %></strong>건</span>
+        </div>
+    </div>
+
+    <!-- 테이블 컨테이너 -->
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="fixed-col">채권명</th>
+                    <!-- <th>종목코드</th> -->
+                    <th>발행일</th>
+                    <th>만기일</th>
+                    <th>표면금리</th>
+                    <th>금리변동구분</th>
+                    <th>이자지급방법</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% bonds.forEach(bond => { %>
+                <tr>
+                    <td class="fixed-col">
+                        <div class="bond-name">
+                            <%= bond.isinCdNm %>
+                            <div class="bond-name-tooltip">
+                                <%= bond.isinCdNm %>
+                            </div>
+                        </div>
+                    </td>
+                    <!-- <td><%= bond.isinCd %></td> -->
+                    <td><%= bond.bondIssuDt %></td>
+                    <td><%= bond.bondExprDt %></td>
+                    <td><%= bond.bondSrfcInrt %>%</td>
+                    <td><%= bond.irtChngDcdNm %></td>
+                    <td><%= bond.bondIntTcdNm %></td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination-container">
+        <ul class="pagination">
+            <% 
+            const currentPage = pagination.page;
+            const totalPages = pagination.totalPages;
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(startPage + 4, totalPages);
+            
+            // 페이지 범위 조정
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+            %>
+
+            <!-- 이전 버튼 -->
+            <% if (currentPage > 1) { %>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage - 1 %>&period=<%= dateRange.period %>">&laquo;</a>
+                </li>
+            <% } %>
+
+            <!-- 페이지 번호 -->
+            <% for(let i = startPage; i <= endPage; i++) { %>
+                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>&period=<%= dateRange.period %>"><%= i %></a>
+                </li>
+            <% } %>
+
+            <!-- 다음 버튼 -->
+            <% if (currentPage < totalPages) { %>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage + 1 %>&period=<%= dateRange.period %>">&raquo;</a>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+</div>
+
+<!-- 필터링 스크립트 -->
+<script>
+// 필터 변경 시 페이지 새로고침
+function updateFilters() {
+    const period = document.getElementById('periodSelect').value;
+    const intType = document.getElementById('intTypeSelect').value;
+    const rateType = document.getElementById('rateTypeSelect').value;
+    
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('period', period);
+    currentUrl.searchParams.set('intType', intType);
+    currentUrl.searchParams.set('rateType', rateType);
+    currentUrl.searchParams.set('page', '1');  // 필터 변경시 첫 페이지로
+    window.location.href = currentUrl.toString();
+}
+
+// 각 필터에 이벤트 리스너 추가
+document.getElementById('periodSelect').addEventListener('change', updateFilters);
+document.getElementById('intTypeSelect').addEventListener('change', updateFilters);
+document.getElementById('rateTypeSelect').addEventListener('change', updateFilters);
+
+// 모바일 터치 이벤트 처리
+document.querySelectorAll('.bond-name').forEach(element => {
+    element.addEventListener('click', function(e) {
+        const tooltip = this.querySelector('.bond-name-tooltip');
+        
+        // 모든 툴팁 숨기기
+        document.querySelectorAll('.bond-name-tooltip').forEach(tip => {
+            if (tip !== tooltip) {
+                tip.style.display = 'none';
+            }
+        });
+        
+        // 클릭된 툴팁 토글
+        if (tooltip.style.display === 'block') {
+            tooltip.style.display = 'none';
+        } else {
+            tooltip.style.display = 'block';
+            
+            // 툴팁 위치 조정
+            const rect = this.getBoundingClientRect();
+            tooltip.style.top = '100%';
+            tooltip.style.left = '0';
+            
+            // 화면 벗어남 방지
+            const tooltipRect = tooltip.getBoundingClientRect();
+            if (tooltipRect.right > window.innerWidth) {
+                tooltip.style.left = 'auto';
+                tooltip.style.right = '0';
+            }
+        }
+        
+        e.stopPropagation();
+    });
+});
+
+// 다른 곳 클릭시 툴팁 닫기
+document.addEventListener('click', function() {
+    document.querySelectorAll('.bond-name-tooltip').forEach(tooltip => {
+        tooltip.style.display = 'none';
+    });
+});
+</script>
