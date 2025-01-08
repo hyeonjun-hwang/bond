@@ -5,8 +5,8 @@ const BondIssue = require("../../models/bondIssueModel");
 
 const migrateBondIssueData = async () => {
   try {
-    // MongoDB 연결
-    await mongoose.connect(process.env.MONGODB_URI);
+    // MongoDB 연결 (DB_URL로 변경)
+    await mongoose.connect(process.env.DB_URL);
     console.log("MongoDB 연결 성공");
 
     const BASE_URL =
@@ -14,7 +14,7 @@ const migrateBondIssueData = async () => {
     const numOfRows = 2500;
 
     // const today = new Date().toISOString().slice(0, 10).replace(/-/g, ""); // 현재 날짜 - YYYYMMDD 형식
-    const today = new Date(2025, 1, 7)
+    const today = new Date("2025-01-08")
       .toISOString()
       .slice(0, 10)
       .replace(/-/g, ""); // 지정 날짜 - YYYYMMDD 형식

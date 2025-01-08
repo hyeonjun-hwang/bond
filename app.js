@@ -13,9 +13,6 @@ app.set("layout", "./views");
 // 메인 페이지 라우트
 app.use("/", require("./routes/main"));
 
-// 매일 채권발행정보 데이터 가져와서 DB에 저장하는 cron 라우트
-app.use("/api", require("./routes/bondIssueRoute"));
-
 // 채권발행정보 요청 테스트용 라우트 추가
 app.use("/api", require("./routes/test2Route"));
 
