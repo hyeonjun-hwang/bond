@@ -1,0 +1,14 @@
+<h1>채권 상세</h1>
+<strong> 1차적인 정보 </strong>
+<ul>
+  <li>채권명: <%= bondDetail.isinCdNm %></li>
+  <li>금리 형태: <%= bondDetail.irtChngDcdNm %></li>
+  <li>표면 금리: <%= bondDetail.bondSrfcInrt %>%</li>
+  <li>채권발행금액: <%= bondDetail.bondIssuAmt %></li>
+  <li>원금 상환 방법: <%= bondDetail.pamtRdptMcdNm %></li>
+</ul>
+<strong> 2차적인 정보 </strong>
+<ul>
+  <li>이자 지급 주기: <%= bondDetail.intPayCyclCtt %></li>
+  <li>채권 이자 유형: <%= bondDetail.bondIntTcdNm %></li>
+</ul>

@@ -19,3 +19,229 @@
 [2025-01-08 21:01:03] INFO: 채권발행정보 스케줄러 종료 
 [2025-01-08 21:19:34] INFO: 채권발행정보 스케줄러 종료 
 [2025-01-08 21:28:09] INFO: 채권발행정보 스케줄러 종료 
+[2025-01-08 22:30:14] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 8. 오후 10:30:14",
+  "isRunning": true,
+  "nextRun": "2025. 1. 9. 오전 1:00:00"
+}
+[2025-01-08 23:30:14] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 8. 오후 11:30:14",
+  "isRunning": true,
+  "nextRun": "2025. 1. 9. 오전 1:00:00"
+}
+[2025-01-09 00:30:14] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 12:30:14",
+  "isRunning": true,
+  "nextRun": "2025. 1. 9. 오전 1:00:00"
+}
+[2025-01-09 01:30:30] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 1:30:30",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 02:36:03] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 2:36:03",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 03:36:03] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 3:36:03",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 04:36:03] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 4:36:03",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 05:37:52] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 5:37:52",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 06:37:52] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 6:37:52",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 07:43:09] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 7:43:09",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 08:43:09] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 8:43:09",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 09:43:09] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 9:43:09",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 10:43:09] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 10:43:09",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 11:43:37] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오전 11:43:37",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 12:43:37] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오후 12:43:37",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 13:43:37] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오후 1:43:37",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 14:43:37] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오후 2:43:37",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 15:49:30] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오후 3:49:30",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 16:49:30] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오후 4:49:30",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 17:49:30] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오후 5:49:30",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 18:50:31] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오후 6:50:31",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 19:50:31] INFO: 스케줄러 상태 체크 {
+  "currentTime": "2025. 1. 9. 오후 7:50:31",
+  "isRunning": true,
+  "nextRun": "2025. 1. 10. 오전 1:00:00"
+}
+[2025-01-09 20:01:45] INFO: 채권발행정보 스케줄러 종료 
+[2025-01-11 14:04:07] INFO: 채권발행정보 스케줄러 시작 {
+  "startTime": "2025. 1. 11. 오후 2:04:07",
+  "nodeVersion": "v22.12.0"
+}
+[2025-01-11 14:04:07] INFO: 다음 스케줄러 실행 예정 {
+  "nextRun": "2025. 1. 11. 오후 2:05:00"
+}
+[2025-01-11 14:05:00] INFO: 채권발행정보 갱신 작업 시작 {
+  "executionTime": "2025. 1. 11. 오후 2:05:00"
+}
+[2025-01-11 14:05:00] ERROR: 채권발행정보 갱신 중 오류 발생 {
+  "error": "fetchBondIssueData is not defined",
+  "stack": "ReferenceError: fetchBondIssueData is not defined\n    at cron.schedule.timezone [as _execution] (/Users/hwanga/Desktop/perpling_dev/bond_service_project/scripts/schedulers/bondIssueScheduler.js:137:24)\n    at Task.execute (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/task.js:17:25)\n    at ScheduledTask.now (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/scheduled-task.js:38:33)\n    at Scheduler.<anonymous> (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/scheduled-task.js:25:18)\n    at Scheduler.emit (node:events:524:28)\n    at Timeout.matchTime [as _onTimeout] (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/scheduler.js:30:26)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+  "time": "2025. 1. 11. 오후 2:05:00"
+}
+[2025-01-11 14:05:07] INFO: 채권발행정보 스케줄러 종료 
+[2025-01-11 14:06:24] INFO: 채권발행정보 스케줄러 시작 {
+  "startTime": "2025. 1. 11. 오후 2:06:24",
+  "nodeVersion": "v22.12.0"
+}
+[2025-01-11 14:06:24] INFO: 다음 스케줄러 실행 예정 {
+  "nextRun": "2025. 1. 11. 오후 2:07:00"
+}
+[2025-01-11 14:07:00] INFO: 채권발행정보 갱신 작업 시작 {
+  "executionTime": "2025. 1. 11. 오후 2:07:00"
+}
+[2025-01-11 14:07:00] ERROR: 채권발행정보 갱신 중 오류 발생 {
+  "error": "fetchBondIssueData is not defined",
+  "stack": "ReferenceError: fetchBondIssueData is not defined\n    at cron.schedule.timezone [as _execution] (/Users/hwanga/Desktop/perpling_dev/bond_service_project/scripts/schedulers/bondIssueScheduler.js:137:24)\n    at Task.execute (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/task.js:17:25)\n    at ScheduledTask.now (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/scheduled-task.js:38:33)\n    at Scheduler.<anonymous> (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/scheduled-task.js:25:18)\n    at Scheduler.emit (node:events:524:28)\n    at Timeout.matchTime [as _onTimeout] (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/scheduler.js:30:26)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+  "time": "2025. 1. 11. 오후 2:07:00"
+}
+[2025-01-11 14:08:00] INFO: 채권발행정보 갱신 작업 시작 {
+  "executionTime": "2025. 1. 11. 오후 2:08:00"
+}
+[2025-01-11 14:08:00] ERROR: 채권발행정보 갱신 중 오류 발생 {
+  "error": "fetchBondIssueData is not defined",
+  "stack": "ReferenceError: fetchBondIssueData is not defined\n    at cron.schedule.timezone [as _execution] (/Users/hwanga/Desktop/perpling_dev/bond_service_project/scripts/schedulers/bondIssueScheduler.js:137:24)\n    at Task.execute (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/task.js:17:25)\n    at ScheduledTask.now (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/scheduled-task.js:38:33)\n    at Scheduler.<anonymous> (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/scheduled-task.js:25:18)\n    at Scheduler.emit (node:events:524:28)\n    at Timeout.matchTime [as _onTimeout] (/Users/hwanga/Desktop/perpling_dev/bond_service_project/node_modules/node-cron/src/scheduler.js:30:26)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+  "time": "2025. 1. 11. 오후 2:08:00"
+}
+[2025-01-11 14:08:48] INFO: 채권발행정보 스케줄러 종료 
+[2025-01-11 14:08:50] INFO: 채권발행정보 스케줄러 시작 {
+  "startTime": "2025. 1. 11. 오후 2:08:50",
+  "nodeVersion": "v22.12.0"
+}
+[2025-01-11 14:08:50] INFO: 다음 스케줄러 실행 예정 {
+  "nextRun": "2025. 1. 11. 오후 2:09:00"
+}
+[2025-01-11 14:09:00] INFO: 채권발행정보 갱신 작업 시작 {
+  "executionTime": "2025. 1. 11. 오후 2:09:00"
+}
+[2025-01-11 14:10:00] INFO: 채권발행정보 갱신 작업 시작 {
+  "executionTime": "2025. 1. 11. 오후 2:10:00"
+}
+[2025-01-11 14:11:00] INFO: 채권발행정보 갱신 작업 시작 {
+  "executionTime": "2025. 1. 11. 오후 2:11:00"
+}
+[2025-01-11 14:11:19] INFO: 채권발행정보 스케줄러 종료 
+[2025-01-11 14:14:42] INFO: 채권발행정보 스케줄러 시작 {
+  "startTime": "2025. 1. 11. 오후 2:14:42",
+  "nodeVersion": "v22.12.0"
+}
+[2025-01-11 14:14:42] INFO: 다음 스케줄러 실행 예정 {
+  "nextRun": "2025. 1. 11. 오후 2:15:00"
+}
+[2025-01-11 14:17:02] INFO: 채권발행정보 스케줄러 종료 
+[2025-01-11 14:17:05] INFO: 채권발행정보 스케줄러 시작 {
+  "startTime": "2025. 1. 11. 오후 2:17:05",
+  "nodeVersion": "v22.12.0"
+}
+[2025-01-11 14:17:05] INFO: 다음 스케줄러 실행 예정 {
+  "nextRun": "2025. 1. 11. 오후 3:00:00"
+}
+[2025-01-11 14:17:12] INFO: 채권발행정보 스케줄러 종료 
+[2025-01-11 14:17:36] INFO: 채권발행정보 스케줄러 시작 {
+  "startTime": "2025. 1. 11. 오후 2:17:35",
+  "nodeVersion": "v22.12.0"
+}
+[2025-01-11 14:17:36] INFO: 다음 스케줄러 실행 예정 {
+  "nextRun": "2025. 1. 11. 오후 3:00:00"
+}
+[2025-01-11 14:18:16] INFO: 채권발행정보 스케줄러 종료 
+[2025-01-11 14:22:10] INFO: 채권발행정보 스케줄러 시작 {
+  "startTime": "2025. 1. 11. 오후 2:22:10",
+  "nodeVersion": "v22.12.0"
+}
+[2025-01-11 14:22:10] INFO: 다음 스케줄러 실행 예정 {
+  "nextRun": "2025. 1. 11. 오후 2:30:00"
+}
+[2025-01-11 14:30:00] INFO: 채권발행정보 갱신 작업 시작 {
+  "executionTime": "2025. 1. 11. 오후 2:30:00"
+}
+[2025-01-11 14:41:39] INFO: 채권발행정보 갱신 완료 {
+  "date": "20250111",
+  "totalProcessed": 27818,
+  "newCount": 0,
+  "updateCount": 27818,
+  "executionDuration": "699.357초",
+  "nextExecutionTime": "2025. 1. 11. 오후 3:00:00"
+}
+[2025-01-11 16:30:00] INFO: 채권발행정보 갱신 작업 시작 {
+  "executionTime": "2025. 1. 11. 오후 4:30:00"
+}
+[2025-01-11 16:33:16] INFO: 채권발행정보 스케줄러 종료 
+[2025-01-11 16:33:47] INFO: 채권발행정보 스케줄러 시작 {
+  "startTime": "2025. 1. 11. 오후 4:33:47",
+  "nodeVersion": "v22.12.0"
+}
+[2025-01-11 16:34:13] INFO: 채권발행정보 스케줄러 시작 {
+  "startTime": "2025. 1. 11. 오후 4:34:13",
+  "nodeVersion": "v22.12.0"
+}
+[2025-01-11 16:34:13] INFO: 다음 스케줄러 실행 예정 {
+  "nextRun": "2025. 1. 12. 오전 1:00:00"
+}
+[2025-01-11 21:04:55] INFO: 채권발행정보 스케줄러 종료 

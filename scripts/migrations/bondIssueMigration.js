@@ -12,13 +12,10 @@ const migrateBondIssueData = async () => {
     const BASE_URL =
       "http://apis.data.go.kr/1160100/service/GetBondTradInfoService/getIssuIssuItemStat";
     const numOfRows = 2500;
-
-    // const today = new Date().toISOString().slice(0, 10).replace(/-/g, ""); // 현재 날짜 - YYYYMMDD 형식
-    const today = new Date("2025-01-08")
+    const today = new Date("2025-01-11")
       .toISOString()
       .slice(0, 10)
       .replace(/-/g, ""); // 지정 날짜 - YYYYMMDD 형식
-
     let totalProcessed = 0;
     let totalNew = 0;
     let totalUpdated = 0;
@@ -29,53 +26,98 @@ const migrateBondIssueData = async () => {
     console.log(`시작 시간: ${new Date().toLocaleString()}`);
 
     while (hasMoreData) {
-      // 전체 데이터 조회 파라미터
-      const params = {
-        serviceKey: decodeURIComponent(
-          process.env.BOND_ISSUE_SERVICE_KEY_ENCODING
-        ),
-        pageNo: currentPage.toString(),
-        numOfRows: numOfRows.toString(),
-        resultType: "json",
-        basDt: today, // 오늘 날짜 기준 데이터만 조회
-      };
+      try {
+        const params = {
+          serviceKey: decodeURIComponent(
+            process.env.BOND_ISSUE_SERVICE_KEY_ENCODING
+          ),
+          pageNo: currentPage.toString(),
+          numOfRows: numOfRows.toString(),
+          resultType: "json",
+          basDt: today,
+        };
 
-      console.log(`\n${currentPage}페이지 처리 중...`);
-      const response = await axios.get(BASE_URL, { params });
+        console.log(`\n${currentPage}페이지 처리 중...`);
+        const response = await axios.get(BASE_URL, { params });
 
-      if (!response.data.response?.body?.items?.item) {
-        throw new Error("API 응답 데이터 형식이 올바르지 않습니다.");
-      }
-
-      const { totalCount } = response.data.response.body;
-      const bondItems = Array.isArray(response.data.response.body.items.item)
-        ? response.data.response.body.items.item
-        : [response.data.response.body.items.item];
-
-      // MongoDB에 저장
-      for (const item of bondItems) {
-        const existingDoc = await BondIssue.findOne({ isinCd: item.isinCd });
-
-        if (existingDoc) {
-          await BondIssue.findOneAndUpdate({ isinCd: item.isinCd }, item, {
-            new: true,
-          });
-          totalUpdated++;
-        } else {
-          await BondIssue.create(item);
-          totalNew++;
+        // API 응답 구조 확인
+        if (!response.data?.response?.body) {
+          // Optional Chaining 사용
+          console.error(
+            "API 응답 전체 구조:",
+            JSON.stringify(response.data, null, 2) // 보기 좋게 포맷팅
+          );
+          throw new Error("API 응답에 body가 없습니다.");
         }
+
+        const responseBody = response.data.response.body;
+        console.log("페이지 응답 구조:", {
+          totalCount: responseBody.totalCount,
+          numOfRows: responseBody.numOfRows,
+          pageNo: responseBody.pageNo,
+          hasItems: !!responseBody.items,
+        });
+
+        if (!responseBody.items) {
+          console.log("더 이상 데이터가 없습니다.");
+          break;
+        }
+
+        const bondItems = Array.isArray(responseBody.items.item)
+          ? responseBody.items.item
+          : [responseBody.items.item];
+
+        if (!bondItems.length) {
+          console.log("페이지에 데이터가 없습니다.");
+          break;
+        }
+
+        let pageProcessed = 0;
+
+        // MongoDB에 저장
+        for (const item of bondItems) {
+          try {
+            const existingDoc = await BondIssue.findOne({
+              isinCd: item.isinCd,
+            });
+            if (existingDoc) {
+              await BondIssue.findOneAndUpdate({ isinCd: item.isinCd }, item, {
+                new: true,
+              });
+              totalUpdated++;
+            } else {
+              await BondIssue.create(item);
+              totalNew++;
+            }
+            pageProcessed++;
+          } catch (dbError) {
+            console.error(
+              `데이터 저장 중 오류 (isinCd: ${item.isinCd}):`,
+              dbError.message
+            );
+          }
+        }
+
+        totalProcessed += pageProcessed;
+        console.log(
+          `처리된 데이터: ${totalProcessed}/${responseBody.totalCount}`
+        );
+        console.log(`신규: ${totalNew}, 업데이트: ${totalUpdated}`);
+
+        hasMoreData = totalProcessed < parseInt(responseBody.totalCount);
+        currentPage++;
+
+        // API 호출 간 짧은 딜레이
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      } catch (pageError) {
+        console.error(`${currentPage}페이지 처리 중 오류:`, pageError.message);
+        if (pageError.response) {
+          console.error("API 에러 응답:", pageError.response.data);
+        }
+        // 에러 발생해도 다음 페이지 계속 시도
+        currentPage++;
+        continue;
       }
-
-      totalProcessed += bondItems.length;
-
-      // 다음 페이지 확인
-      hasMoreData = totalProcessed < parseInt(totalCount);
-      currentPage++;
-
-      // 진행상황 로깅
-      console.log(`처리된 데이터: ${totalProcessed}/${totalCount}`);
-      console.log(`신규: ${totalNew}, 업데이트: ${totalUpdated}`);
     }
 
     console.log("\n=== 채권 데이터 마이그레이션 완료 ===");
@@ -86,10 +128,8 @@ const migrateBondIssueData = async () => {
   } catch (error) {
     console.error("마이그레이션 중 오류 발생:", error);
   } finally {
-    // MongoDB 연결 종료
     await mongoose.disconnect();
     console.log("MongoDB 연결 종료");
-    process.exit();
   }
 };
 

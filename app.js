@@ -4,6 +4,9 @@ const app = express();
 const expressLayouts = require("express-ejs-layouts");
 const connectDB = require("./config/db");
 
+// 테스트용 라우트 추가
+const test2Router = require("./routes/test2Route");
+
 connectDB();
 
 app.use(expressLayouts);
@@ -13,7 +16,7 @@ app.set("layout", "./views");
 // 메인 페이지 라우트
 app.use("/", require("./routes/main"));
 
-// 채권발행정보 요청 테스트용 라우트 추가
+// 테스트용 라우트 사용
 app.use("/api", require("./routes/test2Route"));
 
 // 에러 핸들링 미들웨어 (맨 마지막에 추가)

@@ -1,4 +1,24 @@
 <div class="container-fluid mt-3">
+
+  <!-- 검색창 추가 -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="bondSearchInput" 
+                    placeholder="채권명을 입력하세요" 
+                    value="<%= filters.searchTerm || '' %>"
+                    aria-label="채권명 검색"
+                >
+                <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                    <i class="bi bi-search"></i> 검색
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 필터링 옵션들 -->
     <div class="row mb-3">
         <!-- 기간 선택 -->
@@ -8,6 +28,12 @@
                 <option value="30" <%= dateRange.period === '30' ? 'selected' : '' %>>최근 30일</option>
                 <option value="90" <%= dateRange.period === '90' ? 'selected' : '' %>>최근 90일</option>
                 <option value="all" <%= dateRange.period === 'all' ? 'selected' : '' %>>전체 기간</option>
+                <option value="custom" <%= dateRange.period === 'custom' ? 'selected' : '' %>>
+                    <%= dateRange.period === 'custom' && dateRange.start && dateRange.end
+                        ? dateRange.start.replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3').slice(2) + '~' + dateRange.end.replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3').slice(2)
+                        : '직접 지정' 
+                    %>
+                </option>
             </select>
         </div>
         
@@ -34,7 +60,22 @@
 
     <!-- 총 개수 표시 -->
     <div class="row mb-3">
-        <div class="col-12 text-end">
+        <div class="col-6">
+            <%
+            // 필터의 기본값 체크
+            const isDefaultFilters = 
+                dateRange.period === '90' && 
+                !filters.intType && 
+                !filters.rateType && 
+                !filters.searchTerm;
+            
+            if (!isDefaultFilters) { %>
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="resetFilters" style="transform: scale(0.9);">
+                    <i class="bi bi-arrow-counterclockwise"></i> 필터 초기화
+                </button>
+            <% } %>
+        </div>
+        <div class="col-6 text-end">
             <span class="total-count">총 <strong><%= pagination.total %></strong>건</span>
         </div>
     </div>
@@ -58,7 +99,9 @@
                 <tr>
                     <td class="fixed-col">
                         <div class="bond-name">
-                            <%= bond.isinCdNm %>
+                            <a href="/bonds_list/<%= bond.isinCd %>" style="text-decoration: underline; color: inherit;">
+                                <%= bond.isinCdNm %>
+                            </a>
                             <div class="bond-name-tooltip">
                                 <%= bond.isinCdNm %>
                             </div>
@@ -94,24 +137,52 @@
             <!-- 이전 버튼 -->
             <% if (currentPage > 1) { %>
                 <li class="page-item">
-                    <a class="page-link" href="?page=<%= currentPage - 1 %>&period=<%= dateRange.period %>">&laquo;</a>
+                    <a class="page-link" href="?page=<%= currentPage - 1 %>&period=<%= dateRange.period %>&search=<%= filters.searchTerm %>&intType=<%= filters.intType %>&rateType=<%= filters.rateType %><%= dateRange.period === 'custom' ? '&startDate=' + dateRange.start + '&endDate=' + dateRange.end : '' %>">&laquo;</a>
                 </li>
             <% } %>
 
             <!-- 페이지 번호 -->
             <% for(let i = startPage; i <= endPage; i++) { %>
                 <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                    <a class="page-link" href="?page=<%= i %>&period=<%= dateRange.period %>"><%= i %></a>
+                    <a class="page-link" href="?page=<%= i %>&period=<%= dateRange.period %>&search=<%= filters.searchTerm %>&intType=<%= filters.intType %>&rateType=<%= filters.rateType %><%= dateRange.period === 'custom' ? '&startDate=' + dateRange.start + '&endDate=' + dateRange.end : '' %>"><%= i %></a>
                 </li>
             <% } %>
 
             <!-- 다음 버튼 -->
             <% if (currentPage < totalPages) { %>
                 <li class="page-item">
-                    <a class="page-link" href="?page=<%= currentPage + 1 %>&period=<%= dateRange.period %>">&raquo;</a>
+                    <a class="page-link" href="?page=<%= currentPage + 1 %>&period=<%= dateRange.period %>&search=<%= filters.searchTerm %>&intType=<%= filters.intType %>&rateType=<%= filters.rateType %><%= dateRange.period === 'custom' ? '&startDate=' + dateRange.start + '&endDate=' + dateRange.end : '' %>">&raquo;</a>
                 </li>
             <% } %>
         </ul>
+    </div>
+
+    <!-- 기간 지정 모달 -->
+    <div class="modal fade" id="dateRangeModal" tabindex="-1" aria-labelledby="dateRangeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dateRangeModalLabel">기간 직접 지정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label">시작일</label>
+                        <input type="date" class="form-control" id="startDate" 
+                            value="<%= dateRange.period === 'custom' ? dateRange.start.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3') : '' %>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="endDate" class="form-label">종료일</label>
+                        <input type="date" class="form-control" id="endDate"
+                            value="<%= dateRange.period === 'custom' ? dateRange.end.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3') : '' %>">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary" id="applyDateRange">적용</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -122,19 +193,78 @@ function updateFilters() {
     const period = document.getElementById('periodSelect').value;
     const intType = document.getElementById('intTypeSelect').value;
     const rateType = document.getElementById('rateTypeSelect').value;
+    const searchTerm = document.getElementById('bondSearchInput').value.trim();
     
     const currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set('period', period);
+    if (period !== 'custom') {
+        currentUrl.searchParams.delete('startDate');
+        currentUrl.searchParams.delete('endDate');
+    }
     currentUrl.searchParams.set('intType', intType);
     currentUrl.searchParams.set('rateType', rateType);
-    currentUrl.searchParams.set('page', '1');  // 필터 변경시 첫 페이지로
+    currentUrl.searchParams.set('search', searchTerm);
+    currentUrl.searchParams.set('page', '1');
     window.location.href = currentUrl.toString();
 }
 
-// 각 필터에 이벤트 리스너 추가
-document.getElementById('periodSelect').addEventListener('change', updateFilters);
-document.getElementById('intTypeSelect').addEventListener('change', updateFilters);
-document.getElementById('rateTypeSelect').addEventListener('change', updateFilters);
+// 기존 이벤트 리스너 유지
+document.getElementById('periodSelect').addEventListener('change', function(e) {
+    if (e.target.value === 'custom') {
+        // 모달 표시
+        const modal = new bootstrap.Modal(document.getElementById('dateRangeModal'));
+        modal.show();
+    } else {
+        updateFilters();
+    }
+});
+
+// 기간 직접 지정 적용 버튼 이벤트
+document.getElementById('applyDateRange').addEventListener('click', function() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    
+    if (!startDate || !endDate) {
+        alert('시작일과 종료일을 모두 선택해주세요.');
+        return;
+    }
+    
+    if (startDate > endDate) {
+        alert('종료일은 시작일보다 늦어야 합니다.');
+        return;
+    }
+
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('period', 'custom');
+    currentUrl.searchParams.set('startDate', startDate.replace(/-/g, ''));
+    currentUrl.searchParams.set('endDate', endDate.replace(/-/g, ''));
+    currentUrl.searchParams.set('page', '1');
+    window.location.href = currentUrl.toString();
+});
+
+// 검색 버튼 이벤트 리스너 추가
+document.getElementById('searchButton').addEventListener('click', updateFilters);
+
+// 엔터키 검색 지원
+document.getElementById('bondSearchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        updateFilters();
+    }
+});
+
+// 필터 초기화 버튼 이벤트 리스너
+const resetButton = document.getElementById('resetFilters');
+if (resetButton) {
+    resetButton.addEventListener('click', function() {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('period', '90');
+        currentUrl.searchParams.delete('intType');
+        currentUrl.searchParams.delete('rateType');
+        currentUrl.searchParams.delete('search');
+        currentUrl.searchParams.set('page', '1');
+        window.location.href = currentUrl.toString();
+    });
+}
 
 // 모바일 터치 이벤트 처리
 document.querySelectorAll('.bond-name').forEach(element => {

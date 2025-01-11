@@ -10,29 +10,34 @@ const getBondsList = asyncHandler(async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const period = req.query.period || "14";
+    const period = req.query.period || "90";
     const intType = req.query.intType || "";
     const rateType = req.query.rateType || "";
+    const searchTerm = req.query.search || "";
 
     // 검색 조건 구성
-    const query = {};
+    let query = {};
 
-    // 기간 조건
+    // 날짜 변수 초기화
     const endDate = new Date();
     const startDate = new Date();
+    let startDateStr, endDateStr;
 
-    // 기간 설정
-    if (period !== "all") {
+    // 기간 조건
+    if (period === "custom") {
+      const customStartDate = req.query.startDate;
+      const customEndDate = req.query.endDate;
+      if (customStartDate && customEndDate) {
+        query.bondIssuDt = { $gte: customStartDate, $lte: customEndDate };
+        startDateStr = customStartDate;
+        endDateStr = customEndDate;
+      }
+    } else if (period !== "all") {
       startDate.setDate(endDate.getDate() - parseInt(period));
-    } else {
-      // 전체 기간인 경우 매우 이전 날짜로 설정
-      startDate.setFullYear(2000);
+      startDateStr = startDate.toISOString().slice(0, 10).replace(/-/g, "");
+      endDateStr = endDate.toISOString().slice(0, 10).replace(/-/g, "");
+      query.bondIssuDt = { $gte: startDateStr, $lte: endDateStr };
     }
-
-    // 날짜 형식 변환 (YYYYMMDD)
-    const endDateStr = endDate.toISOString().slice(0, 10).replace(/-/g, "");
-    const startDateStr = startDate.toISOString().slice(0, 10).replace(/-/g, "");
-    query.bondIssuDt = { $gte: startDateStr, $lte: endDateStr };
 
     // 이자지급방식 조건
     if (intType) {
@@ -42,6 +47,11 @@ const getBondsList = asyncHandler(async (req, res) => {
     // 금리변동구분 조건
     if (rateType) {
       query.irtChngDcdNm = rateType;
+    }
+
+    // 검색어 필터 추가
+    if (searchTerm) {
+      query.isinCdNm = { $regex: searchTerm, $options: "i" };
     }
 
     // 캐시가 없거나 만료되었을 때만 DB 조회
@@ -99,6 +109,7 @@ const getBondsList = asyncHandler(async (req, res) => {
       filters: {
         intType,
         rateType,
+        searchTerm,
       },
       bondFilters,
     });

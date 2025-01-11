@@ -30,7 +30,8 @@ connectDB()
 const fetchAndProcessBondData = async () => {
   try {
     const BASE_URL =
-      "http://apis.data.go.kr/1160100/service/GetBondTradInfoService/getIssuIssuItemStat";
+      //   "http://apis.data.go.kr/1160100/service/GetBondTradInfoService/getIssuIssuItemStat"; //채권발행정보
+      "http://apis.data.go.kr/1160100/service/GetBondIssuInfoService/getBondBasiInfo"; //채권기본정보
     const numOfRows = 2500;
 
     const today = new Date()
@@ -116,45 +117,46 @@ const fetchAndProcessBondData = async () => {
 
 // 채권발행정보 스케줄러 설정
 const startBondIssueScheduler = () => {
-  console.log("\n=== 채권발행정보 스케줄러 시작 ===");
-  console.log(
-    "현재 시간:",
-    new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })
-  );
-  console.log(
-    "다음 실행 예정:",
-    getNextExecutionTime().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })
-  );
+  logger.info("채권발행정보 스케줄러 시작", {
+    startTime: new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" }),
+    nodeVersion: process.version,
+    timezone: process.env.TZ,
+  });
 
   const scheduler = cron.schedule(
-    "0 1 * * *", // 매일 새벽 1시
+    // "0 */1 * * *", // 1시간 마다 실행
+    // "*/30 * * * *", // 30분 마다 실행
+    "0 0 * * *", // 매일 새벽 1시 마다 실행
     async () => {
-      // 이전 작업이 실행 중인지 확인하는 플래그
-      if (global.isProcessing) {
-        console.log("이전 작업이 아직 실행 중입니다.");
-        return;
-      }
-
       try {
-        global.isProcessing = true;
         const startTime = new Date();
+        logger.info("채권발행정보 갱신 작업 시작", {
+          executionTime: startTime.toLocaleString("ko-KR", {
+            timeZone: "Asia/Seoul",
+          }),
+        });
 
         const result = await fetchAndProcessBondData();
 
         const endTime = new Date();
         const executionDuration = (endTime - startTime) / 1000;
 
-        console.log(`\n작업 완료 (소요시간: ${executionDuration}초)`);
-        console.log(
-          "다음 실행 예정:",
-          getNextExecutionTime().toLocaleString("ko-KR", {
+        logger.info("채권발행정보 갱신 완료", {
+          date: result.date,
+          totalProcessed: result.processResult.processedCount,
+          newCount: result.processResult.newCount,
+          updateCount: result.processResult.updateCount,
+          executionDuration: `${executionDuration}초`,
+          nextExecutionTime: getNextExecutionTime().toLocaleString("ko-KR", {
             timeZone: "Asia/Seoul",
-          })
-        );
+          }),
+        });
       } catch (error) {
-        console.error("작업 실행 중 오류 발생:", error);
-      } finally {
-        global.isProcessing = false;
+        logger.error("채권발행정보 갱신 중 오류 발생", {
+          error: error.message,
+          stack: error.stack,
+          time: new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" }),
+        });
       }
     },
     {
@@ -162,6 +164,13 @@ const startBondIssueScheduler = () => {
       scheduled: true,
     }
   );
+
+  // 다음 실행 시간 로깅
+  logger.info("다음 스케줄러 실행 예정", {
+    nextRun: getNextExecutionTime().toLocaleString("ko-KR", {
+      timeZone: "Asia/Seoul",
+    }),
+  });
 
   return scheduler;
 };
@@ -171,27 +180,40 @@ function getNextExecutionTime() {
   const now = new Date();
   const next = new Date(now);
 
-  // 테스트용 설정(1분 후) 대신 새벽 1시로 설정
-  next.setHours(1, 0, 0, 0); // 새벽 1시 00분 00초
-
-  // 만약 현재 시간이 새벽 1시 이후라면 다음 날로 설정
-  if (now.getHours() >= 1) {
-    next.setDate(next.getDate() + 1);
-  }
+  // 다음 날 새벽 1시로 설정
+  next.setDate(next.getDate() + 1);
+  next.setHours(1);
+  next.setMinutes(0);
+  next.setSeconds(0);
+  next.setMilliseconds(0);
 
   return next;
 }
 
+// // 30분 단위 테스트용 다음 실행 시간 계산 함수
+// function getNextExecutionTime() {
+//   const now = new Date();
+//   const next = new Date(now);
+//   const currentMinutes = now.getMinutes();
+//   const minutesToAdd = 30 - (currentMinutes % 30);
+
+//   next.setMinutes(now.getMinutes() + minutesToAdd);
+//   next.setSeconds(0);
+//   next.setMilliseconds(0);
+
+//   return next;
+// }
+
 // 스케줄러 상태 모니터링
-setInterval(() => {
-  logger.info("스케줄러 상태 체크", {
-    currentTime: new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" }),
-    isRunning: true,
-    nextRun: getNextExecutionTime().toLocaleString("ko-KR", {
-      timeZone: "Asia/Seoul",
-    }),
-  });
-}, 1000 * 60 * 60); // 1시간마다 상태 체크
+// setInterval(() => {
+//   logger.info("스케줄러 상태 체크", {
+//     currentTime: new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" }),
+//     isRunning: true,
+//     nextRun: getNextExecutionTime().toLocaleString("ko-KR", {
+//       timeZone: "Asia/Seoul",
+//     }),
+//   });
+// }, 1000 * 60 * 60 * 12); // 12시간마다 체크
 
 // 테스트용 테스트 실행 함수
 const testScheduler = async () => {

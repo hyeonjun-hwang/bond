@@ -2,54 +2,41 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 
-router.get("/test2", async (req, res) => {
+router.get("/bond-detail-test", async (req, res) => {
   try {
-    const BASE_URL =
-      "http://apis.data.go.kr/1160100/service/GetBondTradInfoService/getIssuIssuItemStat";
+    const baseURL =
+      "http://apis.data.go.kr/1160100/service/GetBondIssuInfoService/getBondBasiInfo";
 
-    // 쿼리 파라미터에서 값을 가져오거나 기본값 사용
-    const params = {
-      serviceKey: decodeURIComponent(
-        process.env.BOND_ISSUE_SERVICE_KEY_ENCODING
-      ),
-      pageNo: req.query.pageNo || "1",
-      numOfRows: req.query.numOfRows || "1000",
-      resultType: "json",
-      basDt: req.query.basDt || "20250107",
-    };
+    // 기존 URL (주석처리)
+    // const url = `${baseURL}?serviceKey=${process.env.BOND_DETAIL_SERVICE_KEY_ENCODING}&pageNo=1&numOfRows=10&resultType=json`;
 
-    const response = await axios.get(BASE_URL, { params });
+    // 여러 isinCd로 테스트
+    // const testIsinCds = ["KR103103AA33", "KR103104AA24", "KR103104AA32"].join(
+    //   ","
+    // );
 
-    if (!response.data.response?.body?.items?.item) {
-      throw new Error("API 응답 데이터 형식이 올바르지 않습니다.");
-    }
+    // const url = `${baseURL}?serviceKey=${process.env.BOND_DETAIL_SERVICE_KEY_ENCODING}&isinCd=${testIsinCds}&resultType=json`;
+    const url = `${baseURL}?serviceKey=${process.env.BOND_DETAIL_SERVICE_KEY_ENCODING}&resultType=json&numOfRows=5`;
 
-    const { pageNo, numOfRows, totalCount } = response.data.response.body;
-    const bondItems = Array.isArray(response.data.response.body.items.item)
-      ? response.data.response.body.items.item
-      : [response.data.response.body.items.item];
+    console.log("실제 요청 URL:", url);
 
-    res.status(200).json({
-      success: true,
-      message: "채권 데이터 조회 완료",
-      pagination: {
-        pageNo: parseInt(pageNo),
-        numOfRows: parseInt(numOfRows),
-        totalCount: parseInt(totalCount),
-      },
-      processResult: {
-        processedCount: bondItems.length,
-        newCount: 0,
-        updateCount: 0,
-      },
-      data: bondItems,
-    });
+    const response = await axios.get(url);
+
+    console.log("API 응답:", response.data);
+
+    res.json(response.data);
   } catch (error) {
-    console.error("채권 데이터 조회 중 오류:", error);
-    res.status(500).json({
-      success: false,
+    console.error("API 요청 실패:", {
       message: error.message,
-      error: error.response?.data || error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      url: error.config?.url,
+    });
+
+    res.status(500).json({
+      error: "API 요청 실패",
+      message: error.message,
+      details: error.response?.data,
     });
   }
 });
