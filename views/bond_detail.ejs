@@ -12,3 +12,15 @@
   <li>이자 지급 주기: <%= bondDetail.intPayCyclCtt %></li>
   <li>채권 이자 유형: <%= bondDetail.bondIntTcdNm %></li>
 </ul>
+
+<% if (priceInfo) { %>
+<strong> 시세 정보 </strong>
+<ul>
+  <li>기준일자: <%= priceInfo.basDt %></li>
+  <li>종가: <%= priceInfo.clprPrc %></li>
+  <li>전일대비: <%= priceInfo.clprVs %></li>
+  <li>수익률: <%= priceInfo.clprBnfRt %>%</li>
+</ul>
+<% } else { %>
+<p>시세 정보가 없습니다.</p>
+<% } %>

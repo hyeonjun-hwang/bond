@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate:bonds": "node scripts/migrations/bondIssueMigration.js",
     "migrate:bond-details": "node scripts/migrations/bondDetailMigration.js",
+    "migrate:bond-prices": "node scripts/migrations/bondPriceMigration.js",
     "start:bond-issue-scheduler": "node scripts/schedulers/bondIssueScheduler.js",
     "start:bond-detail-scheduler": "node scripts/schedulers/bondDetailScheduler.js",
     "start": "npx nodemon app.js"

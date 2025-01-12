@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const BondDetail = require("../models/bondDetailModel");
+const BondPrice = require("../models/bondPriceModel");
 
 const getBondDetail = asyncHandler(async (req, res) => {
   const isinCd = req.params.id;
@@ -13,10 +14,15 @@ const getBondDetail = asyncHandler(async (req, res) => {
     });
   }
 
+  const latestPrice = await BondPrice.findOne({ isinCd: isinCd })
+    .sort({ basDt: -1 })
+    .limit(1);
+
   res.render("bond_detail", {
     layout: "../views/layouts/main",
     title: "채권 상세 정보",
     bondDetail,
+    priceInfo: latestPrice || null,
   });
 });
 
