@@ -8,8 +8,11 @@
     "migrate:bonds": "node scripts/migrations/bondIssueMigration.js",
     "migrate:bond-details": "node scripts/migrations/bondDetailMigration.js",
     "migrate:bond-prices": "node scripts/migrations/bondPriceMigration.js",
+    "migrate:bond-prices-postgres": "node scripts/migrations/bondPriceMigrationToPostgres.js",
+    "migrate:bond-basics-postgres": "node scripts/migrations/bondBasicMigrationToPostgres.js",
+    "migrate:bond-issues-postgres": "node scripts/migrations/bondIssueMigrationToPostgres.js",
+    "start:bond-price-scheduler": "node scripts/schedulers/bondPriceScheduler.js",
     "start:bond-issue-scheduler": "node scripts/schedulers/bondIssueScheduler.js",
-    "start:bond-detail-scheduler": "node scripts/schedulers/bondDetailScheduler.js",
     "start": "npx nodemon app.js"
   },
   "keywords": [],
@@ -25,6 +28,13 @@
     "mongoose": "^8.9.3",
     "node-cron": "^3.0.3",
     "nodemon": "^3.1.9",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.1",
     "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.2",
+    "@types/sequelize": "^4.28.20"
   }
 }

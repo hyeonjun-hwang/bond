@@ -13,10 +13,10 @@ const migrateBondDetailData = async () => {
     const BASE_URL =
       "http://apis.data.go.kr/1160100/service/GetBondIssuInfoService/getBondBasiInfo";
     const numOfRows = 9999; // 한 페이지당 가져올 데이터 수
-    // const today = new Date("2025-01-11")
-    //   .toISOString()
-    //   .slice(0, 10)
-    //   .replace(/-/g, ""); // 지정 날짜 - YYYYMMDD 형식
+    const today = new Date("2025-01-07")
+      .toISOString()
+      .slice(0, 10)
+      .replace(/-/g, ""); // 지정 날짜 - YYYYMMDD 형식
     let totalProcessed = 0; // 전체 처리된 데이터 수
     let totalNew = 0; // 새로 생성된 데이터 수
     let totalUpdated = 0; // 업데이트된 데이터 수
@@ -38,7 +38,7 @@ const migrateBondDetailData = async () => {
           pageNo: currentPage.toString(),
           numOfRows: numOfRows.toString(),
           resultType: "json",
-          //   basDt: today,
+          basDt: today,
         };
 
         // 4-2. 현재 페이지 처리 시작 로그

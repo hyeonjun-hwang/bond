@@ -19,6 +19,7 @@ const migrateBondPriceData = async () => {
     let totalUpdated = 0;
     let currentPage = 1;
     let hasMoreData = true;
+    const itmsNm = "KR6019802F16"; //하나캐피탈447-1
 
     // 3. 마이그레이션 시작 로그
     console.log("=== 채권시세정보 마이그레이션 시작 ===");
@@ -36,6 +37,7 @@ const migrateBondPriceData = async () => {
           numOfRows: numOfRows.toString(),
           resultType: "json",
           //   basDt: today,
+          itmsNm: itmsNm,
         };
 
         console.log(`\n${currentPage}페이지 처리 중...`);

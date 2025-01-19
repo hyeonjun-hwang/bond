@@ -4,9 +4,9 @@ const BondPrice = require("../models/bondPriceModel");
 
 const getBondDetail = asyncHandler(async (req, res) => {
   const isinCd = req.params.id;
-  const bondDetail = await BondDetail.findOne({ isinCd: isinCd });
+  const bondPrice = await BondPrice.findOne({ isinCd: isinCd });
 
-  if (!bondDetail) {
+  if (!bondPrice) {
     return res.status(404).render("error", {
       layout: "../views/layouts/main",
       title: "에러",

@@ -42,3 +42,7 @@ build/
 # etc
 PRD.md
 test.js
+study_js.js
+
+# config
+config/config.json
