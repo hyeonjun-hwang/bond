@@ -1,23 +1,29 @@
 <h1>채권 상세</h1>
 <strong> 1차적인 정보 </strong>
 <ul>
+  <li>ISIN코드: <%= bondDetail.isinCd %></li>
   <li>채권명: <%= bondDetail.isinCdNm %></li>
+  <li>발행일: <%= bondDetail.bondIssuDt %></li>
+  <li>만기일: <%= bondDetail.bondExprDt %></li>
   <li>금리 형태: <%= bondDetail.irtChngDcdNm %></li>
   <li>표면 금리: <%= bondDetail.bondSrfcInrt %>%</li>
-  <li>채권발행금액: <%= bondDetail.bondIssuAmt %></li>
-  <li>원금 상환 방법: <%= bondDetail.pamtRdptMcdNm %></li>
+  <li>채권발행금액: <%= bondDetail.bondIssuAmt %>원</li>
+  <!-- <li>원금 상환 방법: <%= bondDetail.pamtRdptMcdNm %></li> -->
 </ul>
 <strong> 2차적인 정보 </strong>
 <ul>
-  <li>이자 지급 주기: <%= bondDetail.intPayCyclCtt %></li>
+  <!-- <li>이자 지급 주기: <%= bondDetail.intPayCyclCtt %></li> -->
   <li>채권 이자 유형: <%= bondDetail.bondIntTcdNm %></li>
+  <li>채권발행기관: <%= bondDetail.bondIsurNm %></li>
+  <li>유가증권종류: <%= bondDetail.scrsItmsKcdNm %></li>
+  <li>발행 형태: <%= bondDetail.bondIssuFrmtNm %></li>
 </ul>
 
 <% if (priceInfo) { %>
 <strong> 시세 정보 </strong>
 <ul>
   <li>기준일자: <%= priceInfo.basDt %></li>
-  <li>종가: <%= priceInfo.clprPrc %></li>
+  <li>종가: <%= priceInfo.clprPrc %>원</li>
   <li>전일대비: <%= priceInfo.clprVs %></li>
   <li>수익률: <%= priceInfo.clprBnfRt %>%</li>
 </ul>

@@ -1,5 +1,7 @@
-const BondIssue = require("../models/bondIssueModel");
+const { BondIssue } = require("../models");
 const asyncHandler = require("express-async-handler");
+const { Op } = require("sequelize");
+const sequelize = require("sequelize");
 
 // 캐싱을 적용한 버전
 let cachedFilters = null;
@@ -16,80 +18,100 @@ const getBondsList = asyncHandler(async (req, res) => {
     const searchTerm = req.query.search || "";
 
     // 검색 조건 구성
-    let query = {};
+    let where = {};
 
-    // 날짜 변수 초기화
-    const endDate = new Date();
-    const startDate = new Date();
-    let startDateStr, endDateStr;
-
-    // 기간 조건
+    // 날짜 조건 처리
     if (period === "custom") {
       const customStartDate = req.query.startDate;
       const customEndDate = req.query.endDate;
       if (customStartDate && customEndDate) {
-        query.bondIssuDt = { $gte: customStartDate, $lte: customEndDate };
-        startDateStr = customStartDate;
-        endDateStr = customEndDate;
+        where.bond_issu_dt = {
+          [Op.between]: [
+            customStartDate.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3"),
+            customEndDate.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3"),
+          ],
+        };
       }
     } else if (period !== "all") {
+      const endDate = new Date();
+      const startDate = new Date();
       startDate.setDate(endDate.getDate() - parseInt(period));
-      startDateStr = startDate.toISOString().slice(0, 10).replace(/-/g, "");
-      endDateStr = endDate.toISOString().slice(0, 10).replace(/-/g, "");
-      query.bondIssuDt = { $gte: startDateStr, $lte: endDateStr };
+      where.bond_issu_dt = {
+        [Op.between]: [startDate, endDate],
+      };
     }
 
-    // 이자지급방식 조건
+    // 필터 조건 추가
     if (intType) {
-      query.bondIntTcdNm = intType;
+      where.bond_int_tcd_nm = intType;
     }
-
-    // 금리변동구분 조건
     if (rateType) {
-      query.irtChngDcdNm = rateType;
+      where.irt_chng_dcd_nm = rateType;
     }
-
-    // 검색어 필터 추가
     if (searchTerm) {
-      query.isinCdNm = { $regex: searchTerm, $options: "i" };
+      where.isin_cd_nm = {
+        [Op.iLike]: `%${searchTerm}%`,
+      };
     }
 
-    // 캐시가 없거나 만료되었을 때만 DB 조회
+    // 캐시된 필터 업데이트
     if (!cachedFilters || Date.now() - lastCacheTime > CACHE_DURATION) {
       cachedFilters = {
-        intTypes: await BondIssue.distinct("bondIntTcdNm"),
-        rateTypes: await BondIssue.distinct("irtChngDcdNm"),
+        intTypes: await BondIssue.findAll({
+          attributes: [
+            [
+              sequelize.fn("DISTINCT", sequelize.col("bond_int_tcd_nm")),
+              "bond_int_tcd_nm",
+            ],
+          ],
+          raw: true,
+        }).then((results) => results.map((r) => r.bond_int_tcd_nm)),
+        rateTypes: await BondIssue.findAll({
+          attributes: [
+            [
+              sequelize.fn("DISTINCT", sequelize.col("irt_chng_dcd_nm")),
+              "irt_chng_dcd_nm",
+            ],
+          ],
+          raw: true,
+        }).then((results) => results.map((r) => r.irt_chng_dcd_nm)),
       };
       lastCacheTime = Date.now();
     }
 
-    // 캐시된 필터 사용
-    const bondFilters = cachedFilters;
-
     // 데이터 조회
-    const bonds = await BondIssue.find(query)
-      .select(
-        "isinCd isinCdNm bondIssuDt bondExprDt bondSrfcInrt irtChngDcdNm bondIntTcdNm"
-      )
-      .sort({ bondIssuDt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit);
+    const { rows: bonds, count: total } = await BondIssue.findAndCountAll({
+      where,
+      attributes: [
+        "isin_cd",
+        "isin_cd_nm",
+        "bond_issu_dt",
+        "bond_expr_dt",
+        "bond_srfc_inrt",
+        "irt_chng_dcd_nm",
+        "bond_int_tcd_nm",
+      ],
+      order: [["bond_issu_dt", "DESC"]],
+      offset: (page - 1) * limit,
+      limit: limit,
+      raw: true,
+    });
 
-    // 날짜 형식 변환
+    // 날짜 포맷 변환
     const formattedBonds = bonds.map((bond) => ({
-      ...bond._doc,
-      bondIssuDt: bond.bondIssuDt.replace(
-        /(\d{4})(\d{2})(\d{2})/,
-        (_, y, m, d) => `${y.slice(2)}.${m}.${d}`
-      ),
-      bondExprDt: bond.bondExprDt.replace(
-        /(\d{4})(\d{2})(\d{2})/,
-        (_, y, m, d) => `${y.slice(2)}.${m}.${d}`
-      ),
+      ...bond,
+      isinCd: bond.isin_cd,
+      isinCdNm: bond.isin_cd_nm,
+      bondIssuDt: bond.bond_issu_dt
+        ? bond.bond_issu_dt.slice(2).replace(/-/g, ".")
+        : "",
+      bondExprDt: bond.bond_expr_dt
+        ? bond.bond_expr_dt.slice(2).replace(/-/g, ".")
+        : "",
+      bondSrfcInrt: bond.bond_srfc_inrt,
+      irtChngDcdNm: bond.irt_chng_dcd_nm,
+      bondIntTcdNm: bond.bond_int_tcd_nm,
     }));
-
-    // 전체 데이터 수 조회
-    const total = await BondIssue.countDocuments(query);
 
     res.render("bonds_list", {
       layout: "../views/layouts/main",
@@ -102,16 +124,16 @@ const getBondsList = asyncHandler(async (req, res) => {
         total,
       },
       dateRange: {
-        start: startDateStr,
-        end: endDateStr,
-        period: period,
+        start: period === "custom" ? req.query.startDate : undefined,
+        end: period === "custom" ? req.query.endDate : undefined,
+        period,
       },
       filters: {
         intType,
         rateType,
         searchTerm,
       },
-      bondFilters,
+      bondFilters: cachedFilters,
     });
   } catch (error) {
     console.error("채권 목록 조회 중 오류:", error);

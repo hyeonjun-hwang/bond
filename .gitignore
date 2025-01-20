@@ -43,6 +43,7 @@ build/
 PRD.md
 test.js
 study_js.js
+legacy/
 
 # config
 config/config.json

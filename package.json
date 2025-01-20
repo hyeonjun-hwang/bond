@@ -5,9 +5,6 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate:bonds": "node scripts/migrations/bondIssueMigration.js",
-    "migrate:bond-details": "node scripts/migrations/bondDetailMigration.js",
-    "migrate:bond-prices": "node scripts/migrations/bondPriceMigration.js",
     "migrate:bond-prices-postgres": "node scripts/migrations/bondPriceMigrationToPostgres.js",
     "migrate:bond-basics-postgres": "node scripts/migrations/bondBasicMigrationToPostgres.js",
     "migrate:bond-issues-postgres": "node scripts/migrations/bondIssueMigrationToPostgres.js",
@@ -25,7 +22,6 @@
     "express": "^4.21.2",
     "express-async-handler": "^1.2.0",
     "express-ejs-layouts": "^2.5.1",
-    "mongoose": "^8.9.3",
     "node-cron": "^3.0.3",
     "nodemon": "^3.1.9",
     "pg": "^8.11.3",

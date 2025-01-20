@@ -1,8 +1,7 @@
 1. 채권발행정보 데이터 마이그레이션 (1회성)
-   1.1. 채권발행정보(mongoDB) : npm run migrate:bonds
-   1.2. 채권기본정보(mongoDB) : npm run migrate:bond-details
-   1.3. 채권기본정보(Postgres) : npm run migrate:bond-basics-postgres
-   1.4. 채권시세정보(Postgres) : npm run migrate:bond-prices-postgres
+   1.1. 채권기본정보 : npm run migrate:bond-basics-postgres
+   1.2. 채권시세정보 : npm run migrate:bond-prices-postgres
+   1.3. 채권발행정보 : npm run migrate:bond-issues-postgres
 
 2. 스케줄러
    2.1. 채권시세정보 스케줄러 실행 : npm run start:bond-price-scheduler
