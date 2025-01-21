@@ -6,10 +6,11 @@ const config = require("../../config/database.js")[
 ];
 const BondIssueApi = require("../utils/api/bondIssueApi");
 const logger = require("../utils/logger");
-const { getTodayDate } = require("../utils/formatters/dateFormatter");
 
 const startBondIssueScheduler = () => {
-  logger.info(`채권발행정보 스케줄러 시작 (${new Date().toLocaleString()})`);
+  logger.info(
+    `채권발행정보 스케줄러 시작 (${new Date().toLocaleString("ko-KR")})`
+  );
 
   const bondIssueApi = new BondIssueApi(
     process.env.BOND_ISSUE_SERVICE_KEY_ENCODING
@@ -17,25 +18,28 @@ const startBondIssueScheduler = () => {
 
   cron.schedule(
     "0 1 * * *", // 매일 1시에 실행
-    // "*/5 * * * *", // 5분 마다 실행
+    // "*/5 * * * *", // 테스트용 5분 마다 실행
     async () => {
-      const sequelize = new Sequelize(
-        config.database,
-        config.username,
-        config.password,
-        {
-          host: config.host,
-          dialect: config.dialect,
-          logging: false,
-        }
-      );
-
+      let sequelize;
       try {
+        sequelize = new Sequelize(
+          config.database,
+          config.username,
+          config.password,
+          {
+            host: config.host,
+            dialect: config.dialect,
+            logging: false,
+          }
+        );
+
         const BondIssue = require("../../models/bond_issue")(
           sequelize,
           Sequelize.DataTypes
         );
-        logger.info(`채권발행정보 수집 시작 (${new Date().toLocaleString()})`);
+        logger.info(
+          `채권발행정보 수집 시작 (${new Date().toLocaleString("ko-KR")})`
+        );
 
         let currentPage = 1;
         let totalProcessed = 0;
@@ -63,6 +67,10 @@ const startBondIssueScheduler = () => {
                 pageSuccess++;
                 totalSuccess++;
               } catch (error) {
+                logger.error(
+                  `데이터 처리 중 오류 발생 (isin_cd: ${item.isinCd}):`,
+                  error
+                );
                 pageError++;
                 totalError++;
               }
@@ -80,9 +88,7 @@ const startBondIssueScheduler = () => {
             currentPage++;
             await new Promise((resolve) => setTimeout(resolve, 1000));
           } catch (error) {
-            logger.error(
-              `페이지 ${currentPage} 처리 중 에러: ${error.message}`
-            );
+            logger.error(`페이지 ${currentPage} 처리 중 에러:`, error);
             break;
           }
         }
@@ -92,14 +98,17 @@ const startBondIssueScheduler = () => {
           totalProcessed,
           successCount: totalSuccess,
           errorCount: totalError,
-          completedAt: new Date().toLocaleString(),
+          completedAt: new Date().toLocaleString("ko-KR"),
         });
       } catch (error) {
-        logger.error(`스케줄러 실행 중 에러: ${error.message}`);
+        logger.error("스케줄러 실행 중 에러:", error);
       } finally {
-        await sequelize.close();
+        if (sequelize) {
+          await sequelize.close();
+          logger.info("DB 연결 종료");
+        }
         logger.info(
-          `채권발행정보 스케줄러 종료 (${new Date().toLocaleString()})`
+          `채권발행정보 스케줄러 종료 (${new Date().toLocaleString("ko-KR")})`
         );
       }
     },
@@ -110,4 +119,5 @@ const startBondIssueScheduler = () => {
   );
 };
 
+// 스케줄러 시작
 startBondIssueScheduler();

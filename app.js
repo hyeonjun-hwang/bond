@@ -2,12 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const expressLayouts = require("express-ejs-layouts");
-const connectDB = require("./config/db");
+const db = require("./models"); // Sequelize 모델 import
 
 // 테스트용 라우트 추가
 const test2Router = require("./routes/test2Route");
-
-connectDB();
 
 app.use(expressLayouts);
 app.set("view engine", "ejs");
@@ -27,6 +25,16 @@ app.use(express.static("public"));
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+// DB 연결 확인 후 서버 시작
+db.sequelize
+  .authenticate()
+  .then(() => {
+    console.log("🟢 Database connection has been established successfully.");
+
+    app.listen(port, () => {
+      console.log(`🚀 Server is running on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Unable to connect to the database:", err);
+  });

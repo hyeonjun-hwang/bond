@@ -28,9 +28,10 @@ const startBondPriceScheduler = () => {
       let successCount = 0;
       let errorCount = 0;
       let pageNo = 1;
+      let sequelize;
 
       try {
-        const sequelize = new Sequelize(
+        sequelize = new Sequelize(
           config.database,
           config.username,
           config.password,
@@ -94,7 +95,15 @@ const startBondPriceScheduler = () => {
           pageNo++;
         }
       } catch (error) {
-        console.error(": API 호출 중 오류 발생:", error);
+        logger.error(": API 호출 중 오류 발생:", error);
+      } finally {
+        if (sequelize) {
+          await sequelize.close();
+          logger.info("DB 연결 종료");
+        }
+        logger.info(
+          `채권시세정보 스케줄러 종료 (${new Date().toLocaleString()})`
+        );
       }
 
       console.log(`: 채권시세정보 수집 완료 {
@@ -103,10 +112,10 @@ const startBondPriceScheduler = () => {
         "errorCount": ${errorCount},
         "completedAt": "${new Date().toLocaleString("ko-KR")}"
       }`);
-
-      console.log(
-        `: 채권시세정보 스케줄러 종료 (${new Date().toLocaleString("ko-KR")}) `
-      );
+    },
+    {
+      scheduled: true,
+      timezone: "Asia/Seoul", // 시간대 설정 추가
     }
   );
 };

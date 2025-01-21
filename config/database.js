@@ -8,7 +8,7 @@ module.exports = {
     host: process.env.POSTGRES_HOST || "localhost",
     dialect: "postgres",
     timezone: "+09:00",
-    logging: console.log,
+    logging: false,
   },
   test: {
     username: process.env.POSTGRES_USER,
