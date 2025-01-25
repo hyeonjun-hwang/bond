@@ -54,7 +54,7 @@ const migrateBondBasicDataToPostgres = async () => {
     let totalSuccessCount = 0;
     let totalErrorCount = 0;
     // let pageNo = 1; // 1페이지 부터 시작
-    let pageNo = 1544; // 1544페이지 부터 시작
+    let pageNo = 1728; // 1728페이지 부터 시작
     const errors = [];
     const processedIsinCodes = new Set();
 
@@ -66,6 +66,7 @@ const migrateBondBasicDataToPostgres = async () => {
       resultType: "json",
       numOfRows: 9999,
       pageNo: 1,
+      //   basDt: "20240601", // 임시
     };
 
     const firstResponse = await fetchWithRetry(BASE_URL, firstPageParams);
@@ -87,14 +88,15 @@ const migrateBondBasicDataToPostgres = async () => {
         resultType: "json",
         numOfRows: 9999,
         pageNo: pageNo,
+        // basDt: "20240601", // 임시
       };
 
       const response = await fetchWithRetry(BASE_URL, params);
       const items = response?.items?.item || [];
 
-      if (items.length === 0 || pageNo > totalPages) {
-        break;
-      }
+      //   if (items.length === 0 || pageNo > totalPages) {
+      //     break;
+      //   }
 
       console.log(
         `\n=== 페이지 ${pageNo}/${totalPages} 처리 시작 (${items.length}건) ===`

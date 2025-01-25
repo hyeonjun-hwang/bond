@@ -4,16 +4,16 @@ const { Sequelize } = require("sequelize");
 const config = require("../../config/database.js")[
   process.env.NODE_ENV || "development"
 ];
-const BondIssueApi = require("../utils/api/bondIssueApi");
+const BondBasicApi = require("../utils/api/bondBasicApi");
 const logger = require("../utils/logger");
 
-const startBondIssueScheduler = () => {
+const startBondBasicScheduler = () => {
   logger.info(
-    `채권발행정보 스케줄러 시작 (${new Date().toLocaleString("ko-KR")})`
+    `채권기본정보 스케줄러 시작 (${new Date().toLocaleString("ko-KR")})`
   );
 
-  const bondIssueApi = new BondIssueApi(
-    process.env.BOND_ISSUE_SERVICE_KEY_ENCODING
+  const bondBasicApi = new BondBasicApi(
+    process.env.BOND_BASIC_SERVICE_KEY_ENCODING
   );
 
   cron.schedule(
@@ -33,12 +33,12 @@ const startBondIssueScheduler = () => {
           }
         );
 
-        const BondIssue = require("../../models/bond_issue")(
+        const BondBasic = require("../../models/bond_basic")(
           sequelize,
           Sequelize.DataTypes
         );
         logger.info(
-          `채권발행정보 수집 시작 (${new Date().toLocaleString("ko-KR")})`
+          `채권기본정보 수집 시작 (${new Date().toLocaleString("ko-KR")})`
         );
 
         let currentPage = 1;
@@ -48,7 +48,7 @@ const startBondIssueScheduler = () => {
 
         while (true) {
           try {
-            const response = await bondIssueApi.fetchData(currentPage);
+            const response = await bondBasicApi.fetchData(currentPage);
             const items = response?.items?.item || [];
             let pageSuccess = 0;
             let pageError = 0;
@@ -60,8 +60,8 @@ const startBondIssueScheduler = () => {
 
             for (const item of items) {
               try {
-                const bondIssueData = bondIssueApi.formatData(item);
-                await BondIssue.upsert(bondIssueData, {
+                const bondBasicData = bondBasicApi.formatData(item);
+                await BondBasic.upsert(bondBasicData, {
                   conflictFields: ["isin_cd"],
                 });
                 pageSuccess++;
@@ -94,7 +94,7 @@ const startBondIssueScheduler = () => {
         }
 
         logger.info({
-          message: "채권발행정보 수집 완료",
+          message: "채권기본정보 수집 완료",
           totalProcessed,
           successCount: totalSuccess,
           errorCount: totalError,
@@ -108,7 +108,7 @@ const startBondIssueScheduler = () => {
           logger.info("DB 연결 종료");
         }
         logger.info(
-          `채권발행정보 스케줄러 종료 (${new Date().toLocaleString("ko-KR")})`
+          `채권기본정보 스케줄러 종료 (${new Date().toLocaleString("ko-KR")})`
         );
       }
     },
@@ -120,4 +120,4 @@ const startBondIssueScheduler = () => {
 };
 
 // 스케줄러 시작
-startBondIssueScheduler();
+startBondBasicScheduler();

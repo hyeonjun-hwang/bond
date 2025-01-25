@@ -6,6 +6,7 @@
 2. 스케줄러
    2.1. 채권시세정보 스케줄러 실행 : npm run start:bond-price-scheduler
    2.2. 채권발행정보 스케줄러 실행 : npm run start:bond-issue-scheduler
+   2.3. 채권기본정보 스케줄러 실행 : npm run start:bond-basic-scheduler
 
 3. 스키마 마이그레이션
    3.1. 스키마 마이그레이션 실행 방법 : npx sequelize-cli db:migrate

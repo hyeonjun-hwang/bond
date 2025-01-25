@@ -10,6 +10,7 @@
     "migrate:bond-issues-postgres": "node scripts/migrations/bondIssueMigrationToPostgres.js",
     "start:bond-price-scheduler": "node scripts/schedulers/bondPriceScheduler.js",
     "start:bond-issue-scheduler": "node scripts/schedulers/bondIssueScheduler.js",
+    "start:bond-basic-scheduler": "node scripts/schedulers/bondBasicScheduler.js",
     "start": "npx nodemon app.js"
   },
   "keywords": [],
