@@ -54,7 +54,7 @@ const migrateBondBasicDataToPostgres = async () => {
     let totalSuccessCount = 0;
     let totalErrorCount = 0;
     // let pageNo = 1; // 1페이지 부터 시작
-    let pageNo = 1728; // 1728페이지 부터 시작
+    let pageNo = 2029; // 2029페이지 부터 시작
     const errors = [];
     const processedIsinCodes = new Set();
 

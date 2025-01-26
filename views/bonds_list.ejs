@@ -191,32 +191,50 @@
 <script>
 // 필터 변경 시 페이지 새로고침
 function updateFilters() {
+    // 1. 각 필터의 현재 선택된 값을 가져옴
     const period = document.getElementById('periodSelect').value;
     const intType = document.getElementById('intTypeSelect').value;
     const rateType = document.getElementById('rateTypeSelect').value;
     const searchTerm = document.getElementById('bondSearchInput').value.trim();
     
+    // 2. 현재 페이지의 URL을 기반으로 새로운 URL 객체 생성
     const currentUrl = new URL(window.location.href);
+
+    // 3. URL의 쿼리 파라미터들을 설정
     currentUrl.searchParams.set('period', period);
+
+    // 4. 기간이 'custom'이 아닐 경우 커스텀 날짜 파라미터 제거
     if (period !== 'custom') {
         currentUrl.searchParams.delete('startDate');
         currentUrl.searchParams.delete('endDate');
     }
+
+    // 5. 나머지 필터 파라미터들 설정
     currentUrl.searchParams.set('intType', intType);
     currentUrl.searchParams.set('rateType', rateType);
     currentUrl.searchParams.set('search', searchTerm);
     currentUrl.searchParams.set('page', '1');
+
+    // 6. 새로운 URL로 페이지 이동 (페이지 새로고침)
     window.location.href = currentUrl.toString();
 }
 
-// 기존 이벤트 리스너 유지
+// 기간 커스텀 이벤트 리스너
 document.getElementById('periodSelect').addEventListener('change', function(e) {
     if (e.target.value === 'custom') {
         // 모달 표시
         const modal = new bootstrap.Modal(document.getElementById('dateRangeModal'));
         modal.show();
-    } else {
+    }
+    else {
         updateFilters();
+    }
+});
+
+// 필터 선택 이벤트 리스너 (periodSelect는 제외)
+document.querySelectorAll('.filter-select').forEach(select => {
+    if (select.id !== 'periodSelect') {  // periodSelect는 제외
+        select.addEventListener('change', updateFilters);
     }
 });
 
