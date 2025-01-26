@@ -407,7 +407,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "bond_basics",
-      freezeTableName: true,
       timestamps: false,
       underscored: true,
       indexes: [

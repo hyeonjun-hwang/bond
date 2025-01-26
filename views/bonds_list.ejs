@@ -91,7 +91,6 @@
                     <th>만기일</th>
                     <th>표면금리</th>
                     <th>금리변동구분</th>
-                    <th>이자지급방법</th>
                     <th>이자유형</th>
                 </tr>
             </thead>
@@ -108,7 +107,7 @@
                             </div>
                         </div>
                     </td>
-                    <td><%= bond.isinCd %></td>
+                    <!-- <td><%= bond.isinCd %></td> -->
                     <td><%= bond.bondIssuDt %></td>
                     <td><%= bond.bondExprDt %></td>
                     <td><%= bond.bondSrfcInrt %>%</td>
@@ -231,12 +230,19 @@ document.getElementById('periodSelect').addEventListener('change', function(e) {
     }
 });
 
-// 필터 선택 이벤트 리스너 (periodSelect는 제외)
-document.querySelectorAll('.filter-select').forEach(select => {
-    if (select.id !== 'periodSelect') {  // periodSelect는 제외
-        select.addEventListener('change', updateFilters);
-    }
-});
+// // 필터 선택 이벤트 리스너 (periodSelect는 제외)
+// document.querySelectorAll('.filter-select').forEach(select => {
+//     if (select.id !== 'periodSelect') {  // periodSelect는 제외
+//         select.addEventListener('change', updateFilters);
+//     }
+// });
+
+// 이자지급방식 선택 이벤트 리스너
+document.getElementById('intTypeSelect').addEventListener('change', updateFilters);
+
+// 금리변동구분 선택 이벤트 리스너
+document.getElementById('rateTypeSelect').addEventListener('change', updateFilters);
+
 
 // 기간 직접 지정 적용 버튼 이벤트
 document.getElementById('applyDateRange').addEventListener('click', function() {

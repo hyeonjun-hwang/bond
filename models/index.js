@@ -41,6 +41,9 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
+const BondBasic = require("./bond_basic")(sequelize, Sequelize.DataTypes);
+console.log("BondBasic 모델 설정:", BondBasic.options);
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

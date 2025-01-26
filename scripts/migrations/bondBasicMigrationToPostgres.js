@@ -8,7 +8,7 @@ const config = require("../../config/database.js")[
 const BASE_URL =
   "http://apis.data.go.kr/1160100/service/GetBondIssuInfoService/getBondBasiInfo";
 const MAX_RETRIES = 3;
-const DELAY_BETWEEN_CALLS = 1000; // 1초
+const DELAY_BETWEEN_CALLS = 2000; // 1초
 
 // 재시도 로직을 포함한 API 호출 함수
 const fetchWithRetry = async (url, params, retries = MAX_RETRIES) => {
@@ -53,8 +53,9 @@ const migrateBondBasicDataToPostgres = async () => {
 
     let totalSuccessCount = 0;
     let totalErrorCount = 0;
-    // let pageNo = 1; // 1페이지 부터 시작
-    let pageNo = 2029; // 2029페이지 부터 시작
+    let pageNo = 1; // 1페이지 부터 시작
+    // let pageNo = 5078; // 5078페이지 부터 시작
+    let numOfRows = 5000;
     const errors = [];
     const processedIsinCodes = new Set();
 
@@ -64,7 +65,7 @@ const migrateBondBasicDataToPostgres = async () => {
         process.env.BOND_BASIC_SERVICE_KEY_ENCODING
       ),
       resultType: "json",
-      numOfRows: 9999,
+      numOfRows: numOfRows,
       pageNo: 1,
       //   basDt: "20240601", // 임시
     };
@@ -86,7 +87,7 @@ const migrateBondBasicDataToPostgres = async () => {
           process.env.BOND_BASIC_SERVICE_KEY_ENCODING
         ),
         resultType: "json",
-        numOfRows: 9999,
+        numOfRows: numOfRows,
         pageNo: pageNo,
         // basDt: "20240601", // 임시
       };
@@ -208,7 +209,14 @@ const migrateBondBasicDataToPostgres = async () => {
           });
 
           if (existingBond) {
-            await existingBond.update(bondBasicData);
+            // 기존 데이터의 bas_dt와 새로운 데이터의 bas_dt 비교
+            const existingDate = new Date(existingBond.bas_dt);
+            const newDate = new Date(formatDate(item.basDt));
+
+            // 새로운 데이터의 bas_dt가 더 최신일 경우에만 업데이트
+            if (newDate > existingDate) {
+              await existingBond.update(bondBasicData);
+            }
           } else {
             await BondBasic.create(bondBasicData);
           }
