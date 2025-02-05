@@ -5,7 +5,16 @@ const formatDate = (dateStr) => {
 
 const getTodayDate = () => {
   const today = new Date();
-  return today.toISOString().split("T")[0];
+  return today
+    .toLocaleString("ko-KR", {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+    .split(". ")
+    .join("-")
+    .replace(".", "");
 };
 
 // API 요청용 날짜 포맷 함수 추가

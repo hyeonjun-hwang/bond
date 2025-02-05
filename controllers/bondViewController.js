@@ -1,4 +1,4 @@
-const { BondIssue, bondBasic } = require("../models");
+const { BondIssue, BondBasic } = require("../models");
 const asyncHandler = require("express-async-handler");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
@@ -12,7 +12,7 @@ const getBondsList = asyncHandler(async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const period = req.query.period || "90";
+    const period = req.query.period || "180";
     const intType = req.query.intType || "";
     const rateType = req.query.rateType || "";
     const searchTerm = req.query.search || "";
@@ -57,7 +57,7 @@ const getBondsList = asyncHandler(async (req, res) => {
     // 캐시된 필터 업데이트
     if (!cachedFilters || Date.now() - lastCacheTime > CACHE_DURATION) {
       cachedFilters = {
-        intTypes: await BondIssue.findAll({
+        intTypes: await BondBasic.findAll({
           attributes: [
             [
               sequelize.fn("DISTINCT", sequelize.col("bond_int_tcd_nm")),
@@ -66,7 +66,7 @@ const getBondsList = asyncHandler(async (req, res) => {
           ],
           raw: true,
         }).then((results) => results.map((r) => r.bond_int_tcd_nm)),
-        rateTypes: await BondIssue.findAll({
+        rateTypes: await BondBasic.findAll({
           attributes: [
             [
               sequelize.fn("DISTINCT", sequelize.col("irt_chng_dcd_nm")),
@@ -80,7 +80,7 @@ const getBondsList = asyncHandler(async (req, res) => {
     }
 
     // 데이터 조회
-    const { rows: bonds, count: total } = await BondIssue.findAndCountAll({
+    const { rows: bonds, count: total } = await BondBasic.findAndCountAll({
       where,
       attributes: [
         "isin_cd",

@@ -49,10 +49,10 @@ const startBondPriceScheduler = () => {
 
         while (true) {
           const response = await bondPriceApi.fetchData(pageNo);
-          console.log(
-            ": API 응답 전체 구조:",
-            JSON.stringify(response, null, 2)
-          );
+          //   console.log(
+          //     ": API 응답 전체 구조:",
+          //     JSON.stringify(response, null, 2)
+          //   );
 
           if (!response?.response?.body?.items?.item) {
             console.log(": API 응답에 데이터가 없습니다.");

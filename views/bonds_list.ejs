@@ -27,6 +27,8 @@
                 <option value="14" <%= dateRange.period === '14' ? 'selected' : '' %>>최근 14일</option>
                 <option value="30" <%= dateRange.period === '30' ? 'selected' : '' %>>최근 30일</option>
                 <option value="90" <%= dateRange.period === '90' ? 'selected' : '' %>>최근 90일</option>
+                <option value="180" <%= dateRange.period === '180' ? 'selected' : '' %>>최근 180일</option>
+                <option value="365" <%= dateRange.period === '365' ? 'selected' : '' %>>최근 365일</option>
                 <option value="all" <%= dateRange.period === 'all' ? 'selected' : '' %>>전체 기간</option>
                 <option value="custom" <%= dateRange.period === 'custom' ? 'selected' : '' %>>
                     <%= dateRange.period === 'custom' && dateRange.start && dateRange.end

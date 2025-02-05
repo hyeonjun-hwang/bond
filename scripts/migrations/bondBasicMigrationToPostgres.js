@@ -7,17 +7,23 @@ const config = require("../../config/database.js")[
 
 const BASE_URL =
   "http://apis.data.go.kr/1160100/service/GetBondIssuInfoService/getBondBasiInfo";
-const MAX_RETRIES = 3;
-const DELAY_BETWEEN_CALLS = 2000; // 1초
+const MAX_RETRIES = 5;
+const DELAY_BETWEEN_CALLS = 60000; // 60초
 
 // 재시도 로직을 포함한 API 호출 함수
 const fetchWithRetry = async (url, params, retries = MAX_RETRIES) => {
   try {
     const response = await axios.get(url, { params });
+
     return response.data?.response?.body || null;
   } catch (error) {
     if (retries > 0) {
       console.log(`API 호출 실패, ${retries}회 재시도...`);
+      //   console.log(`응답 헤더 결과 코드: ${response.headers.resultCode}`);
+      //   console.log(`응답 헤더 결과 메시지: ${response.headers.resultMsg}`);
+      //   console.error(`${retries}회 재시도 에러 메시지 : ${error}`);
+      //   const retryDelay = DELAY_BETWEEN_CALLS * (MAX_RETRIES - retries + 1);
+      //   await new Promise((resolve) => setTimeout(resolve, retryDelay));
       await new Promise((resolve) => setTimeout(resolve, DELAY_BETWEEN_CALLS));
       return fetchWithRetry(url, params, retries - 1);
     }
@@ -53,8 +59,8 @@ const migrateBondBasicDataToPostgres = async () => {
 
     let totalSuccessCount = 0;
     let totalErrorCount = 0;
-    let pageNo = 1; // 1페이지 부터 시작
-    // let pageNo = 5078; // 5078페이지 부터 시작
+    // let pageNo = 1; // 1페이지 부터 시작
+    let pageNo = 4287; // 4287페이지 부터 시작
     let numOfRows = 5000;
     const errors = [];
     const processedIsinCodes = new Set();

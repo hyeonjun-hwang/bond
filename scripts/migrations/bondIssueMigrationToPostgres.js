@@ -86,7 +86,7 @@ const migrateBondIssueDataToPostgres = async () => {
         resultType: "json",
         numOfRows: 9999,
         pageNo: pageNo,
-        // basDt: "20250121", // 임시
+        // basDt: "20250205", // 임시
       };
 
       const response = await fetchWithRetry(BASE_URL, params);

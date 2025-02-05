@@ -22,8 +22,8 @@ class BondPriceApi {
       const response = await axios.get(BASE_URL, { params });
       console.log(": API 요청 파라미터:", params);
       console.log(
-        ": API 응답 전체 구조:",
-        JSON.stringify(response.data, null, 2)
+        ": API 응답 헤더 : ",
+        JSON.stringify(response.data.response.header, null, 2)
       );
       return response.data;
     } catch (error) {

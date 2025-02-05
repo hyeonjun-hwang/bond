@@ -21,7 +21,10 @@ class BondIssueApi {
     try {
       const response = await axios.get(BASE_URL, { params });
       // 전체 응답 구조 로깅
-      console.log("전체 API 응답:", JSON.stringify(response.data, null, 2));
+      console.log(
+        "API 응답 해더 : ",
+        JSON.stringify(response.data.response.header, null, 2)
+      );
       return response.data?.response?.body;
     } catch (error) {
       // 에러 상세 정보 로깅
