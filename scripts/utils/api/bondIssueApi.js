@@ -21,9 +21,14 @@ class BondIssueApi {
     try {
       const response = await axios.get(BASE_URL, { params });
       // 전체 응답 구조 로깅
+      console.log(": API 요청 파라미터:", params);
       console.log(
         "API 응답 해더 : ",
         JSON.stringify(response.data.response.header, null, 2)
+      );
+      console.log(
+        ": API 응답 totalCount : ",
+        JSON.stringify(response.data.response.body.totalCount, null, 2)
       );
       return response.data?.response?.body;
     } catch (error) {

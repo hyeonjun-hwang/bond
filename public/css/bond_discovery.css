@@ -1,0 +1,104 @@
+.container {
+  margin-bottom: 50px;
+}
+
+.discovery-title {
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-bottom: 1.3rem;
+  text-align: center;
+}
+
+.bond-table-container {
+  position: relative;
+  overflow-x: auto;
+}
+
+.fixed-column {
+  position: sticky;
+  left: 0;
+  background-color: white;
+  z-index: 1;
+  border-right: 1px solid #dee2e6;
+  max-width: 140px;
+  width: 140px;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.2;
+}
+
+/* 테이블 셀 높이 조정 */
+.table td.fixed-column {
+  padding: 12px 8px; /* 상하 패딩 증가 */
+  min-height: 48px; /* 최소 높이 설정 */
+}
+
+/* 테이블 헤더 높이도 맞춤 */
+.table th.fixed-column {
+  padding: 12px 8px;
+}
+
+/* 그림자 효과 추가 */
+/* .fixed-column::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+} */
+
+/* 다른 컬럼들의 너비 설정 */
+.table th:not(.fixed-column),
+.table td:not(.fixed-column) {
+  width: 80px; /* 다른 컬럼들의 너비 */
+  min-width: 80px; /* 최소 너비 설정 */
+}
+
+/* 채권명 링크 스타일 */
+.bond-link {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+/* .bond-link:hover {
+  color: #0d6efd;
+  text-decoration: none;
+} */
+
+/* 탭 스타일링 */
+.nav-tabs {
+  width: fit-content;
+}
+
+.nav-tabs .nav-item .nav-link {
+  padding: 4px 12px;
+  font-size: 16px;
+  min-width: 70px;
+  text-align: center;
+}
+
+.nav-tabs .nav-link.active {
+  font-weight: 400;
+}
+
+/* 채권 개수 표시 컨테이너 스타일 */
+.bonds-count-container {
+  padding: 0.5rem 0.5rem;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+/* 상단 필터/정렬 영역 스타일 */
+.filter-sort-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}

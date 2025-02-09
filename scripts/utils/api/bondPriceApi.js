@@ -25,6 +25,10 @@ class BondPriceApi {
         ": API 응답 헤더 : ",
         JSON.stringify(response.data.response.header, null, 2)
       );
+      console.log(
+        ": API 응답 totalCount : ",
+        JSON.stringify(response.data.response.body.totalCount, null, 2)
+      );
       return response.data;
     } catch (error) {
       console.error(": API 에러 상세:", {

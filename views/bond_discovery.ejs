@@ -1,0 +1,137 @@
+<!-- 채권 발견 페이지 -->
+
+<div class="container mt-4">
+  <p class="discovery-title">이자 지급 주기별(이표채)</p>
+  <!-- 탭 메뉴 -->
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a
+        class="nav-link <%= currentTab === 'all' ? 'active' : '' %>"
+        href="?tab=all"
+        >전체</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link <%= currentTab === '1' ? 'active' : '' %>"
+        href="?tab=1"
+        >1개월</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link <%= currentTab === '3' ? 'active' : '' %>"
+        href="?tab=3"
+        >3개월</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link <%= currentTab === '6' ? 'active' : '' %>"
+        href="?tab=6"
+        >6개월</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link <%= currentTab === '12' ? 'active' : '' %>"
+        href="?tab=12"
+        >12개월</a
+      >
+    </li>
+  </ul>
+
+  <!-- 총 채권 개수 -->
+  <div class="filter-sort-container">
+    <div class="bonds-count-container"><%= totalBondsInCurrentTab %>개</div>
+
+    <div class="btn-group">
+      <a
+        href="?tab=<%= currentTab %>&sort=date&page=<%= pagination.page %>"
+        class="btn btn-sm <%= currentSort === 'date' ? 'btn-primary' : 'btn-outline-primary' %>"
+      >
+        최근 발행순
+      </a>
+      <a
+        href="?tab=<%= currentTab %>&sort=rate&page=<%= pagination.page %>"
+        class="btn btn-sm <%= currentSort === 'rate' ? 'btn-primary' : 'btn-outline-primary' %>"
+      >
+        이자 높은순
+      </a>
+    </div>
+  </div>
+
+  <!-- 채권 리스트 -->
+  <div class="table-responsive">
+    <div class="bond-table-container">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-column">채권명</th>
+            <th>표면 이자</th>
+            <th>이자 주기</th>
+            <th>발행일</th>
+            <th>만기일</th>
+            <th>신용등급</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% bonds.forEach(bond => { %>
+          <tr>
+            <td class="fixed-column">
+              <a href="/bonds_list/<%= bond.isin_cd %>" class="bond-link">
+                <%= bond.isin_cd_nm %>
+              </a>
+            </td>
+            <td><%= bond.bond_srfc_inrt %></td>
+            <td><%= bond.int_pay_cycl_ctt %></td>
+            <td><%= bond.bond_issu_dt %></td>
+            <td><%= bond.bond_expr_dt %></td>
+            <td><%= bond.credit_rating || '-' %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 페이지네이션 -->
+  <% if (pagination.totalPages > 1) { %>
+  <nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item <%= pagination.page === 1 ? 'disabled' : '' %>">
+        <a
+          class="page-link"
+          href="?tab=<%= currentTab %>&sort=<%= currentSort %>&page=<%= pagination.page - 1 %>"
+          >이전</a
+        >
+      </li>
+
+      <% for(let i = Math.max(1, pagination.page - 2); i <=
+      Math.min(pagination.totalPages, pagination.page + 2); i++) { %>
+      <li class="page-item <%= pagination.page === i ? 'active' : '' %>">
+        <a
+          class="page-link"
+          href="?tab=<%= currentTab %>&sort=<%= currentSort %>&page=<%= i %>"
+          ><%= i %></a
+        >
+      </li>
+      <% } %>
+
+      <li
+        class="page-item <%= pagination.page === pagination.totalPages ? 'disabled' : '' %>"
+      >
+        <a
+          class="page-link"
+          href="?tab=<%= currentTab %>&sort=<%= currentSort %>&page=<%= pagination.page + 1 %>"
+          >다음</a
+        >
+      </li>
+    </ul>
+  </nav>
+  <% } %>
+</div>
+
+<div>
+  <p class="discovery-title">채권 신용 등급별</p>
+</div>

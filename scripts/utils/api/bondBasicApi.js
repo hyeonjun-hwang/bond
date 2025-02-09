@@ -19,6 +19,10 @@ class BondBasicApi {
       };
 
       const response = await axios.get(this.baseUrl, { params });
+      console.log(
+        "API 응답 해더 : ",
+        JSON.stringify(response.data.response.header, null, 2)
+      );
       return response.data?.response?.body;
     } catch (error) {
       throw new Error(`채권기본정보 API 호출 실패: ${error.message}`);
