@@ -8,7 +8,7 @@ const config = require("../../config/database.js")[
 const BASE_URL =
   "http://apis.data.go.kr/1160100/service/GetBondIssuInfoService/getBondBasiInfo";
 const MAX_RETRIES = 5;
-const DELAY_BETWEEN_CALLS = 60000; // 60초
+const DELAY_BETWEEN_CALLS = 300000; // 5분
 
 // 재시도 로직을 포함한 API 호출 함수
 const fetchWithRetry = async (url, params, retries = MAX_RETRIES) => {
@@ -60,7 +60,7 @@ const migrateBondBasicDataToPostgres = async () => {
     let totalSuccessCount = 0;
     let totalErrorCount = 0;
     // let pageNo = 1; // 1페이지 부터 시작
-    let pageNo = 4287; // 4287페이지 부터 시작
+    let pageNo = 7819; // 7819페이지 부터 시작
     let numOfRows = 5000;
     const errors = [];
     const processedIsinCodes = new Set();

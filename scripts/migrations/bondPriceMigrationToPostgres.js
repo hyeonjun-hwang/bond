@@ -53,7 +53,7 @@ const migrateBondPriceDataToPostgres = async () => {
           pageNo: currentPage.toString(),
           numOfRows: numOfRows.toString(),
           resultType: "json",
-          //   basDt: "20250205", // 임시
+          basDt: "20250216", // 임시
         };
 
         console.log(`\n${currentPage}페이지 처리 중...`);

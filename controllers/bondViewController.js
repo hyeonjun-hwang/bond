@@ -2,6 +2,9 @@ const { BondIssue, BondBasic } = require("../models");
 const asyncHandler = require("express-async-handler");
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
+const {
+  calculateCreditRating,
+} = require("../scripts/utils/formatters/creditRatingFormatter");
 
 // 캐싱을 적용한 버전
 let cachedFilters = null;
@@ -64,6 +67,14 @@ const getBondsList = asyncHandler(async (req, res) => {
               "bond_int_tcd_nm",
             ],
           ],
+          where: {
+            bond_int_tcd_nm: {
+              [Op.and]: [
+                { [Op.ne]: "" }, // 빈 문자열 제외
+                { [Op.ne]: null }, // null 값도 제외
+              ],
+            },
+          },
           raw: true,
         }).then((results) => results.map((r) => r.bond_int_tcd_nm)),
         rateTypes: await BondBasic.findAll({
@@ -73,6 +84,14 @@ const getBondsList = asyncHandler(async (req, res) => {
               "irt_chng_dcd_nm",
             ],
           ],
+          where: {
+            irt_chng_dcd_nm: {
+              [Op.and]: [
+                { [Op.ne]: "" }, // 빈 문자열 제외
+                { [Op.ne]: null }, // null 값도 제외
+              ],
+            },
+          },
           raw: true,
         }).then((results) => results.map((r) => r.irt_chng_dcd_nm)),
       };

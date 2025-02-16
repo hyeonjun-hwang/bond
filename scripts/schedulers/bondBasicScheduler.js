@@ -17,7 +17,7 @@ const startBondBasicScheduler = () => {
   );
 
   cron.schedule(
-    "0 7 * * *", // 매일 7시에 실행
+    "30 23 * * *", // 매일 오후 11시 30분에 실행
     // "*/5 * * * *", // 테스트용 5분 마다 실행
     async () => {
       let sequelize;

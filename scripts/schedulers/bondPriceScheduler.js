@@ -16,9 +16,8 @@ const startBondPriceScheduler = () => {
   );
 
   cron.schedule(
-    "0 7 * * *", // 매일 7시에 실행
+    "30 23 * * *", // 매일 오후 11시 30분에 실행
     // "*/5 * * * *", // 테스트를 위해 5분 마다 실행
-    // "*/30 * * * * *", // 테스트를 위해 30초마다 실행
     async () => {
       console.log(
         `: 채권시세정보 수집 시작 (${new Date().toLocaleString("ko-KR")}) `

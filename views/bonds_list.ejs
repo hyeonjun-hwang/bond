@@ -66,7 +66,7 @@
             <%
             // 필터의 기본값 체크
             const isDefaultFilters = 
-                dateRange.period === '90' && 
+                dateRange.period === '180' && 
                 !filters.intType && 
                 !filters.rateType && 
                 !filters.searchTerm;
@@ -284,7 +284,7 @@ const resetButton = document.getElementById('resetFilters');
 if (resetButton) {
     resetButton.addEventListener('click', function() {
         const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.set('period', '90');
+        currentUrl.searchParams.set('period', '180');
         currentUrl.searchParams.delete('intType');
         currentUrl.searchParams.delete('rateType');
         currentUrl.searchParams.delete('search');
