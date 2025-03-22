@@ -23,7 +23,7 @@ class BondIssueApi {
       // 전체 응답 구조 로깅
       console.log(": API 요청 파라미터:", params);
       console.log(
-        "API 응답 해더 : ",
+        "API 응답 해더 : \n",
         JSON.stringify(response.data.response.header, null, 2)
       );
       console.log(

@@ -16,7 +16,8 @@ const startBondIssueScheduler = () => {
     process.env.BOND_ISSUE_SERVICE_KEY_ENCODING
   );
 
-  cron.schedule(
+  // 스케줄러 인스턴스 생성
+  const scheduler = cron.schedule(
     "30 23 * * *", // 매일 오후 11시 30분에 실행
     // "*/5 * * * *", // 테스트용 5분 마다 실행
     async () => {
@@ -117,7 +118,37 @@ const startBondIssueScheduler = () => {
       timezone: "Asia/Seoul",
     }
   );
+
+  // 프로세스 종료 시그널 처리
+  process.on("SIGINT", () => {
+    logger.info("채권발행정보 스케줄러 종료 요청 수신");
+    scheduler.stop();
+    process.exit(0);
+  });
+
+  process.on("SIGTERM", () => {
+    logger.info("채권발행정보 스케줄러 종료 요청 수신");
+    scheduler.stop();
+    process.exit(0);
+  });
+
+  // 예기치 않은 에러 처리
+  process.on("uncaughtException", (error) => {
+    logger.error("예기치 않은 에러 발생:", error);
+  });
+
+  process.on("unhandledRejection", (reason, promise) => {
+    logger.error("처리되지 않은 Promise 거부:", reason);
+  });
+
+  // 스케줄러 상태 모니터링
+  setInterval(() => {
+    logger.info("채권발행정보 스케줄러 실행 중...");
+  }, 12 * 60 * 60 * 1000); // 12시간마다 로그
 };
 
 // 스케줄러 시작
 startBondIssueScheduler();
+
+// 프로세스 유지
+process.stdin.resume();
